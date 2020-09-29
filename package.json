@@ -1,5 +1,8 @@
 {
-  "dependencies": {
-    "sqlite3": "^5.0.0"
-  }
+  "name": "yyt",
+  "version": "1.0.0",
+  "description": "Yuriy's Task Manager",
+  "main": "yyt.js",
+  "author": "Yuriy Yashkir <yuriy.yashkir@gmail.com>",
+  "license": "MIT"
 }
