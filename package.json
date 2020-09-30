@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Yuriy's Task Manager",
   "main": "yyt.js",
+  "bin": {
+    "yyt": "yyt.js"
+  },
   "author": "Yuriy Yashkir <yuriy.yashkir@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^5.0.0"
+  }
 }
