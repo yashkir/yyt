@@ -9,6 +9,8 @@
   "author": "Yuriy Yashkir <yuriy.yashkir@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "sqlite3": "^5.0.0"
+    "chalk": "^4.1.0",
+    "sqlite3": "^5.0.0",
+    "yargs": "^16.0.3"
   }
 }

@@ -1,48 +1,40 @@
 #!/usr/bin/env node
 
+const readline = require('readline');
+const yargs = require("yargs");
+const backend = require('./backend')
 
-//const db = new sqlite3.Database('./test.db');
+backend.init();
 
-let command = process.argv[2];
+yargs
+.usage("Usage: <command> <id/text>")
 
-if (!command) {
-  console.log(
-    "Welcome to YYT.\n" +
-    "Commands: resetdb, dumpdb, add, show"
-  );
-  return;
-}
+.command('ls', 'list all tasks', { }, (argv) => {
+    backend.show()
+})
+.command('add <task>', "Add a task to the task list.", {}, (argv) => {
+    console.log(`adding task: ${argv.task}`);
+    backend.add(argv.task);
+})
+.command('do <task_id>', "mark a task as done", {}, (argv) => {
+    console.log(`Doing task: ${argv.task_id}`);
+    backend.done(argv.task_id);
+})
+.command('resetdb', "reset the database", {}, () => {
+    const rl = readline.createInterface(process.stdin, process.stdout);
 
-const sqlite3 = require('sqlite3')
-const tasks = require('./backend')
+    rl.write("RESETTING THE DATABASE\n");
+    rl.question("Are you sure? (yes/NO):", (answer) => {
+        if(answer == 'yes') {
+            backend.reset();
+        }
+        rl.close();
+    });
+})
+.command('dumpdb', "Output the whole database", {},
+    () => {
+        backend.dump();
+    })
 
-tasks.init();
-
-switch(command) {
-
-  case 'resetdb':
-    tasks.reset()
-    break;
-
-  case 'add':
-    let task_text = process.argv[3];
-    console.log(`Adding task: ${task_text}`);
-    tasks.add(task_text)
-    break;
-
-  case 'done':
-    let id = process.argv[3];
-    tasks.done(id);
-    break;
-  
-  case 'show':
-    tasks.show();
-    break;
-
-  case 'dumpdb':
-    tasks.dump()
-    break;
-
-  default:
-    console.log(`Command "${command}" not recognized.`);
-}
+.demandCommand(1)
+.argv;
