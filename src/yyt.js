@@ -9,7 +9,7 @@ backend.init();
 yargs
 .usage("Usage: <command> <id/text>")
 
-.command('ls', 'list all tasks', { }, (argv) => {
+.command('ls', 'list all tasks', { }, () => {
     backend.show()
 })
 .command('add <task>', "Add a task to the task list.", {}, (argv) => {

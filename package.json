@@ -2,9 +2,9 @@
   "name": "yyt",
   "version": "1.0.0",
   "description": "Yuriy's Task Manager",
-  "main": "yyt.js",
+  "main": "src/yyt.js",
   "bin": {
-    "yyt": "yyt.js"
+    "yyt": "src/yyt.js"
   },
   "author": "Yuriy Yashkir <yuriy.yashkir@gmail.com>",
   "license": "MIT",
