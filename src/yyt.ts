@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const readline = require('readline');
-const yargs = require("yargs");
-const backend = require('./backend')
+import readline = require('readline');
+import yargs = require("yargs");
+import backend = require('./backend')
 
 backend.init();
 
@@ -18,11 +18,11 @@ yargs
 })
 .command('add <task>', "Add a task to the task list.", {}, (argv) => {
     console.log(`adding task: ${argv.task}`);
-    backend.add(argv.task);
+    backend.add(argv.task as string);
 })
 .command('do <task_id>', "mark a task as done", {}, (argv) => {
     console.log(`Doing task: ${argv.task_id}`);
-    backend.done(argv.task_id);
+    backend.done(argv.task_id as number);
 })
 .command('resetdb', "reset the database", {}, () => {
     const rl = readline.createInterface(process.stdin, process.stdout);

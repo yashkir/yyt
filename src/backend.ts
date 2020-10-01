@@ -1,13 +1,17 @@
-const sqlite3 = require('sqlite3')
+import sqlite3 = require('sqlite3')
 
-var db;
+var db: sqlite3.Database;
 
-function init() {
+interface IShowCallback {
+    (rows: any[]): void;
+}
+
+export function init(): void {
     db = new sqlite3.Database('/home/yashkir/tmp/test.db');
     sqlite3.verbose();
 }
 
-function add(text) {
+export function add(text: string): string {
     db.serialize(() => {
         db.run(`CREATE TABLE IF NOT EXISTS 
                 tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -16,11 +20,11 @@ function add(text) {
         db.run(`INSERT INTO tasks (text, done) VALUES ('${text}', 0)`);
     });
 
-    result = "Task added."
+    let result = "Task added."
     return result
 }
 
-function done(id) {
+export function done(id: number): void {
     db.serialize(() => {
         //db.get(`SELECT text FROM tasks WHERE id=${id}`, (error, row) => {
             //new_text = `DONE -- ${row.text}`;
@@ -31,29 +35,22 @@ function done(id) {
     return;
 }
 
-function show (callback) {
+export function show (callback: IShowCallback): void {
     db.all("SELECT id, text, done FROM tasks", (error, rows) => {
         console.log(rows);
         callback(rows);
     });
 }
 
-function reset() {
+export function reset(): void {
     console.log("Resetting DB...");
     db.run("DROP TABLE IF EXISTS tasks");
 }
 
-function dump() {
+export function dump(): void {
     db.all("SELECT id, text FROM tasks", (error, rows) => {
         rows.forEach((row) => {
             console.log(row);
         });
     });
 }
-
-exports.init = init;
-exports.add = add;
-exports.show = show;
-exports.reset = reset;
-exports.dump = dump;
-exports.done = done;
