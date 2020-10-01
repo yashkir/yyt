@@ -17,7 +17,7 @@ export function init(verbose?: boolean): void {
     if (verbose) {
         sqlite3.verbose();
     }
-    
+
     create_table();
 }
 
@@ -68,7 +68,7 @@ export function dump(): void {
 }
 
 function create_table(): void {
-    db.run(`CREATE TABLE IF NOT EXISTS 
+    db.run(`CREATE TABLE IF NOT EXISTS
             tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                   text TEXT,
                   done BOOLEAN)`);
