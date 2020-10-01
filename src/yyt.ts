@@ -4,6 +4,8 @@ import readline = require('readline');
 import yargs = require("yargs");
 import backend = require('./backend')
 
+const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb'];
+
 backend.init();
 
 yargs
@@ -40,8 +42,7 @@ yargs
     })
 .demandCommand(1)
 .check((argv, options) => {
-    let valid_commands = ['ls', 'add', 'do', 'resetdb', 'dumpdb'];
-    if (valid_commands.indexOf(argv._[0]) < 0) {
+    if (VALID_COMMANDS.indexOf(argv._[0]) < 0) {
         throw new Error(`Invalid command: "${argv._[0]}"`);
     } else {
         return true;
