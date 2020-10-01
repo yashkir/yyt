@@ -7,8 +7,7 @@ import backend = require('./backend')
 backend.init();
 
 yargs
-.usage("Usage: <command> <id/text>")
-
+.usage("Usage: $0 <command> <id/text>")
 .command('ls', 'list all tasks', {}, () => {
     backend.show((rows) => {
         rows.forEach((row) => {
@@ -39,6 +38,13 @@ yargs
     () => {
         backend.dump();
     })
-
 .demandCommand(1)
+.check((argv, options) => {
+    let valid_commands = ['ls', 'add', 'do', 'resetdb', 'dumpdb'];
+    if (valid_commands.indexOf(argv._[0]) < 0) {
+        throw new Error(`Invalid command: "${argv._[0]}"`);
+    } else {
+        return true;
+    }
+})
 .argv;
