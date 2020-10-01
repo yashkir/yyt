@@ -39,7 +39,7 @@ yargs
             backend.dump();
         })
     .demandCommand(1)
-    .check((argv, options) => {
+    .check((argv) => {
         if (VALID_COMMANDS.indexOf(argv._[0]) < 0) {
             throw new Error(`Invalid command: "${argv._[0]}"`);
         } else {

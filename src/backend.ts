@@ -44,6 +44,9 @@ export function done(id: number): void {
 export function list(callback: IListCallback): void {
     let tasks: ITask[] = [];
     db.all("SELECT id, text, done FROM tasks", (error, rows) => {
+        if (error) {
+            throw error;
+        }
         rows.forEach((row) => {
             tasks.push({
                 id: row.id,
@@ -63,6 +66,9 @@ export function reset(): void {
 
 export function dump(): void {
     db.all("SELECT * FROM tasks", (error, rows) => {
+        if (error) {
+            throw error;
+        }
         console.log(rows)
     });
 }
