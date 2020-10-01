@@ -9,11 +9,11 @@ backend.init();
 yargs
     .usage("Usage: $0 <command> <id/text>")
     .command('ls', 'list all tasks', {}, () => {
-        backend.show((rows) => {
-            rows.forEach((row) => {
-                console.log(`${row.done} ${row.id}: ${row.text}`);
+        backend.list((tasks) => {
+            tasks.forEach((task) => {
+                console.log(`${task.isDone} ${task.id}: ${task.text}`);
             });
-        })
+        });
     })
     .command('add <task>', "Add a task to the task list.", {}, (argv) => {
         console.log(`adding task: ${argv.task}`);

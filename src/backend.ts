@@ -2,21 +2,27 @@ import sqlite3 = require('sqlite3')
 
 var db: sqlite3.Database;
 
-interface IShowCallback {
-    (rows: any[]): void;
+export interface ITask {
+    id: number,
+    text: string,
+    isDone: boolean
 }
 
-export function init(): void {
+export interface IListCallback {
+    (tasks: ITask[]): void;
+}
+
+export function init(verbose?: boolean): void {
     db = new sqlite3.Database('/home/yashkir/tmp/test.db');
-    sqlite3.verbose();
+    if (verbose) {
+        sqlite3.verbose();
+    }
+    
+    create_table();
 }
 
 export function add(text: string): string {
     db.serialize(() => {
-        db.run(`CREATE TABLE IF NOT EXISTS 
-                tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                      text TEXT,
-                      done BOOLEAN)`);
         db.run(`INSERT INTO tasks (text, done) VALUES ('${text}', 0)`);
     });
 
@@ -35,22 +41,35 @@ export function done(id: number): void {
     return;
 }
 
-export function show (callback: IShowCallback): void {
+export function list(callback: IListCallback): void {
+    let tasks: ITask[] = [];
     db.all("SELECT id, text, done FROM tasks", (error, rows) => {
-        console.log(rows);
-        callback(rows);
+        rows.forEach((row) => {
+            tasks.push({
+                id: row.id,
+                text: row.text,
+                isDone: row.done
+            });
+        });
+        callback(tasks);
     });
 }
 
 export function reset(): void {
     console.log("Resetting DB...");
     db.run("DROP TABLE IF EXISTS tasks");
+    create_table();
 }
 
 export function dump(): void {
-    db.all("SELECT id, text FROM tasks", (error, rows) => {
-        rows.forEach((row) => {
-            console.log(row);
-        });
+    db.all("SELECT * FROM tasks", (error, rows) => {
+        console.log(rows)
     });
+}
+
+function create_table(): void {
+    db.run(`CREATE TABLE IF NOT EXISTS 
+            tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                  text TEXT,
+                  done BOOLEAN)`);
 }
