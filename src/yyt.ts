@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import readline = require('readline');
 import yargs = require("yargs");
 import backend = require('./backend')
