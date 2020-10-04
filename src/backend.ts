@@ -12,8 +12,8 @@ export interface IListCallback {
     (tasks: ITask[]): void;
 }
 
-export function init(verbose?: boolean): void {
-    db = new sqlite3.Database('/home/yashkir/tmp/test.db');
+export function init(path: string, verbose?: boolean): void {
+    db = new sqlite3.Database(path);
     if (verbose) {
         sqlite3.verbose();
     }
@@ -21,23 +21,12 @@ export function init(verbose?: boolean): void {
     create_table();
 }
 
-export function add(text: string): string {
-    db.serialize(() => {
-        db.run(`INSERT INTO tasks (text, done) VALUES ('${text}', 0)`);
-    });
-
-    let result = "Task added."
-    return result
+export function add(text: string): void {
+    db.run("INSERT INTO tasks (text, done) VALUES (?, 0)", text);
 }
 
 export function done(id: number): void {
-    db.serialize(() => {
-        //db.get(`SELECT text FROM tasks WHERE id=${id}`, (error, row) => {
-            //new_text = `DONE -- ${row.text}`;
-            //db.run(`UPDATE tasks SET text='${new_text}' WHERE id IS ${id}`);
-        //});
-        db.run(`UPDATE tasks SET done=1 WHERE id IS ${id}`);
-    });
+    db.run("UPDATE tasks SET done=1 WHERE id IS ?", id);
     return;
 }
 
@@ -61,6 +50,7 @@ export function list(callback: IListCallback): void {
 export function reset(): void {
     console.log("Resetting DB...");
     db.run("DROP TABLE IF EXISTS tasks");
+
     create_table();
 }
 

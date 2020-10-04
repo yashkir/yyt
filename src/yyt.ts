@@ -3,8 +3,9 @@ import yargs = require("yargs");
 import backend = require('./backend')
 
 const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb'];
+const DBPATH = '/home/yashkir/tmp/test.db'
 
-backend.init();
+backend.init(DBPATH);
 
 yargs
     .usage("Usage: $0 <command> <id/text>")
