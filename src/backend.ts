@@ -2,6 +2,7 @@ import sqlite3 = require('sqlite3')
 
 var db: sqlite3.Database;
 
+//nothing
 export interface ITask {
     id: number,
     text: string,
@@ -12,13 +13,15 @@ export interface IListCallback {
     (tasks: ITask[]): void;
 }
 
-export function init(path: string, verbose?: boolean): void {
+export function init(path: string, verbose?: boolean): boolean {
     db = new sqlite3.Database(path);
     if (verbose) {
         sqlite3.verbose();
     }
 
     create_table();
+
+    return true;
 }
 
 export function add(text: string): void {

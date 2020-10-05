@@ -7,6 +7,8 @@ const DBPATH = '/home/yashkir/tmp/test.db'
 
 backend.init(DBPATH);
 
+console.log("something")
+
 yargs
     .usage("Usage: $0 <command> <id/text>")
     .command('ls', 'list all tasks', {}, () => {
@@ -24,7 +26,7 @@ yargs
         console.log(`Doing task: ${argv.task_id}`);
         backend.done(argv.task_id as number);
     })
-    .command('resetdb', "reset the database", {}, () => {
+    .command('resetdb', "reset the database yay", {}, () => {
         const rl = readline.createInterface(process.stdin, process.stdout);
 
         rl.write("RESETTING THE DATABASE\n");
