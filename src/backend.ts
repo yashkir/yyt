@@ -65,6 +65,26 @@ export function dump(callback: { (arg0: any[]): void }) {
     });
 }
 
+export function export_todotxt(callback: { (arg0: string): void }): void {
+    let lines: string[] = [];
+
+    list((tasks: ITask[]) => {
+        tasks.forEach((task) => {
+            let line: string;
+            if (task.isDone) {
+                line = `x ${task.text}`;
+            } else {
+                line = `${task.text}`;
+            }
+            lines.push(line);
+            console.log(lines);
+        });
+
+        let blob = lines.join('\n')
+        callback(blob);
+    });
+}
+
 function create_table(): void {
     db.run(`CREATE TABLE IF NOT EXISTS
             tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

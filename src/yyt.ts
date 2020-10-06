@@ -1,8 +1,9 @@
 import readline = require('readline');
 import yargs = require("yargs");
 import backend = require('./backend')
+import fs = require('fs')
 
-const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb'];
+const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb', 'export'];
 const DBPATH = '/home/yashkir/tmp/test.db'
 
 
@@ -29,6 +30,9 @@ yargs
     })
     .command('dumpdb', "Output the whole database", {}, () => {
         dumpdb();
+    })
+    .command('export <filename>', "export to a todo.txt formatted file", {}, (argv) => {
+        export_todotxt(argv.filename as string);
     })
     .demandCommand(1)
     .check((argv) => {
@@ -76,5 +80,15 @@ function resetdb() {
 function dumpdb() {
     backend.dump( (rows: any[]) => {
         console.table(rows);
+    });
+}
+
+function export_todotxt(filename: string) {
+    backend.export_todotxt((blob) => {
+        fs.writeFile(filename, blob, (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
     });
 }
