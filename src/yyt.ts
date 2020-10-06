@@ -74,5 +74,7 @@ function resetdb() {
 }
 
 function dumpdb() {
-    backend.dump();
+    backend.dump( (rows: any[]) => {
+        console.table(rows);
+    });
 }

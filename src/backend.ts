@@ -2,7 +2,6 @@ import sqlite3 = require('sqlite3')
 
 var db: sqlite3.Database;
 
-//nothing
 export interface ITask {
     id: number,
     text: string,
@@ -57,12 +56,12 @@ export function reset(): void {
     create_table();
 }
 
-export function dump(): void {
+export function dump(callback: { (arg0: any[]): void }) {
     db.all("SELECT * FROM tasks", (error, rows) => {
         if (error) {
             throw error;
         }
-        console.log(rows)
+        callback(rows);
     });
 }
 
