@@ -19,8 +19,16 @@ backend.init(DBPATH);
 
 yargs
     .usage("Usage: $0 <command> <id/text>")
-    .command('ls', 'list all tasks', {}, () => {
-        list();
+    .option('all', {
+        alias: 'a',
+        describe: 'target all tasks',
+    })
+    .command('ls', 'list all tasks', {}, (argv) => {
+        if (argv.a) {
+            list(true);
+        } else {
+            list()
+        }
     })
     .command('add <task>', "Add a task to the task list.", {}, (argv) => {
         add(argv.task as string);
@@ -53,17 +61,18 @@ yargs
 
 /* These commands are run by yargs */
 
-function list() {
+function list(showAll?: boolean) {
     backend.list((tasks) => {
         tasks.forEach((task) => {
             let line: string;
 
             if (task.isDone) {
-                line = CHALK_DONE( `${task.id} : DONE : ${task.text}` )
+                if (showAll) {
+                    console.log(CHALK_DONE( `${task.id} : DONE : ${task.text}` ))
+                }
             } else {
-                line = `${task.id} : ${task.text}`;
+                console.log(`${task.id} : ${task.text}`);
             }
-            console.log(line);
         });
     });
 }
