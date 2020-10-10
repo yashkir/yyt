@@ -2,9 +2,12 @@ import readline = require('readline');
 import yargs = require("yargs");
 import backend = require('./backend')
 import fs = require('fs')
+import chalk = require('chalk');
 
 const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb', 'export', 'import'];
 const DBPATH = '/home/yashkir/tmp/test.db'
+
+const CHALK_DONE = chalk.grey
 
 
 /* Open the DB */
@@ -53,7 +56,14 @@ yargs
 function list() {
     backend.list((tasks) => {
         tasks.forEach((task) => {
-            console.log(`${task.isDone} ${task.id}: ${task.text}`);
+            let line: string;
+
+            if (task.isDone) {
+                line = CHALK_DONE( `${task.id} : DONE : ${task.text}` )
+            } else {
+                line = `${task.id} : ${task.text}`;
+            }
+            console.log(line);
         });
     });
 }
