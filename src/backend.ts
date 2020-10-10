@@ -23,8 +23,8 @@ export function init(path: string, verbose?: boolean): boolean {
     return true;
 }
 
-export function add(text: string): void {
-    db.run("INSERT INTO tasks (text, done) VALUES (?, 0)", text);
+export function add(text: string, done: boolean = false): void {
+    db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", text, done);
 }
 
 export function done(id: number): void {
@@ -50,7 +50,6 @@ export function list(callback: IListCallback): void {
 }
 
 export function reset(): void {
-    console.log("Resetting DB...");
     db.run("DROP TABLE IF EXISTS tasks");
 
     create_table();
@@ -82,6 +81,25 @@ export function export_todotxt(callback: { (arg0: string): void }): void {
 
         let blob = lines.join('\n')
         callback(blob);
+    });
+}
+
+/**
+ * Load a 'todo.txt' formatted string into the database.
+ * WARNING: resets the database.
+ */
+export function import_todotxt(blob: string): void {
+    let lines = blob.split('\n');
+
+    db.serialize(() => {
+        reset();
+        lines.forEach((line) => {
+            if (/^x /.test(line)) {
+                add(line.replace(/^x /, ''), true);
+            } else if (line.length > 0) {
+                add(line);
+            }
+        });
     });
 }
 

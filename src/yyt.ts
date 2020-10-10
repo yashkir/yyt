@@ -3,7 +3,7 @@ import yargs = require("yargs");
 import backend = require('./backend')
 import fs = require('fs')
 
-const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb', 'export'];
+const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb', 'export', 'import'];
 const DBPATH = '/home/yashkir/tmp/test.db'
 
 
@@ -33,6 +33,9 @@ yargs
     })
     .command('export <filename>', "export to a todo.txt formatted file", {}, (argv) => {
         export_todotxt(argv.filename as string);
+    })
+    .command('import <filename>', "import a todo.txt formatted file, erases the DB", {}, (argv) => {
+        import_todotxt(argv.filename as string);
     })
     .demandCommand(1)
     .check((argv) => {
@@ -90,5 +93,15 @@ function export_todotxt(filename: string) {
                 console.log(err);
             }
         });
+    });
+}
+
+function import_todotxt(filename: string) {
+    fs.readFile(filename, {'encoding': 'utf-8'}, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            backend.import_todotxt(data);
+        }
     });
 }
