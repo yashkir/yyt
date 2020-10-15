@@ -23,6 +23,10 @@ export function init(path: string, verbose?: boolean): boolean {
     return true;
 }
 
+export function close(): void {
+    db.close();
+}
+
 export function add(text: string, done: boolean = false): void {
     db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", text, done);
 }

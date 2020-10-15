@@ -7,8 +7,10 @@ const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
 const app = express();
 const port = 8080;
 
-let t1 = handlebars.compile(fs.readFileSync('views/index.html').toString());
-let t2 = handlebars.compile(fs.readFileSync('views/tasks.html').toString());
+backend.init(DBPATH);
+
+let t1 = handlebars.compile(fs.readFileSync('views/index.mustache').toString());
+let t2 = handlebars.compile(fs.readFileSync('views/tasks.mustache').toString());
 
 app.use(express.static("public"));
 
@@ -17,7 +19,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/tasks', (req, res) => {
-    backend.init(DBPATH);
     backend.list((tasks) => {
         res.send(t2( { tasks: tasks } ));
     });
