@@ -8,6 +8,7 @@
     {{#each tasks}}
       <ul>
         <li {{#if this.isDone}}class="done"{{/if}}>
+          <a href="{{this.id}}/done">[done]</a>
           {{this.id}} : {{#if this.isDone}}DONE : {{/if}} {{this.text}}
         </li>
       </ul>

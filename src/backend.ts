@@ -27,13 +27,34 @@ export function close(): void {
     db.close();
 }
 
-export function add(text: string, done: boolean = false): void {
-    db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", text, done);
+export function add(text: string, done: boolean = false, callback?: Function): void {
+    db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", [text, done], (err) => {
+        if (callback) {
+            callback();
+        };
+    });
 }
 
-export function done(id: number): void {
-    db.run("UPDATE tasks SET done=1 WHERE id IS ?", id);
-    return;
+export function done(id: number, toggle?: boolean, callback?: Function): void {
+    if (toggle) {
+        db.get("SELECT done FROM tasks WHERE id IS ?", [id], (err, row) => {
+            if (row.done == 0) {
+                db.run("UPDATE tasks SET done=1 WHERE id IS ?", [id], (err) => {
+                    if (callback) { callback(); }
+                });
+            } else {
+                db.run("UPDATE tasks SET done=0 WHERE id IS ?", [id], (err) => {
+                    if (callback) { callback(); }
+                });
+            }
+        });
+    } else {
+        db.run("UPDATE tasks SET done=1 WHERE id IS ?", [id], (err) => {
+            if (callback) {
+              callback();
+            }
+        });
+    }
 }
 
 export function list(callback: IListCallback): void {

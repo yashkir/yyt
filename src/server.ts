@@ -24,6 +24,12 @@ app.get('/tasks', (req, res) => {
     });
 });
 
+app.get('/tasks/:taskId/done', (req, res) => {
+    backend.done(parseInt(req.params.taskId), true, () => {
+        res.redirect('..');
+    });
+});
+
 app.listen(port, () => {
     console.log(`Sever running at http://localhost:${port}`);
 });
