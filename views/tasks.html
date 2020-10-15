@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="/css/tasks.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <h1>Task List</h1>
+    {{#each tasks}}
+      <ul>
+        <li {{#if this.isDone}}class="done"{{/if}}>
+          {{this.id}} : {{#if this.isDone}}DONE : {{/if}} {{this.text}}
+        </li>
+      </ul>
+    {{/each}}
+  </body>
+</html>
