@@ -25,7 +25,7 @@ app.get('/tasks', (req, res) => {
 });
 
 app.get('/tasks/:taskId/done', (req, res) => {
-    backend.done(parseInt(req.params.taskId), true, () => {
+    backend.done(parseInt(req.params.taskId), true, (err) => {
         res.redirect('..');
     });
 });

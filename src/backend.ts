@@ -12,46 +12,47 @@ export interface IListCallback {
     (tasks: ITask[]): void;
 }
 
-export function init(path: string, verbose?: boolean): boolean {
+export function init(path: string, verbose?: boolean, callback?: (err: Error | null) => void): void {
     db = new sqlite3.Database(path);
     if (verbose) {
         sqlite3.verbose();
     }
 
-    create_table();
-
-    return true;
+    db.run(`CREATE TABLE IF NOT EXISTS
+            tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                  text TEXT,
+                  done BOOLEAN)`, callback);
 }
 
 export function close(): void {
     db.close();
 }
 
-export function add(text: string, done: boolean = false, callback?: Function): void {
+export function add(text: string, done: boolean = false, callback?: (err: Error | null) => void): void {
     db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", [text, done], (err) => {
         if (callback) {
-            callback();
+            callback(err);
         };
     });
 }
 
-export function done(id: number, toggle?: boolean, callback?: Function): void {
+export function done(id: number, toggle?: boolean, callback?: (err: Error | null) => void): void {
     if (toggle) {
         db.get("SELECT done FROM tasks WHERE id IS ?", [id], (err, row) => {
             if (row.done == 0) {
                 db.run("UPDATE tasks SET done=1 WHERE id IS ?", [id], (err) => {
-                    if (callback) { callback(); }
+                    if (callback) { callback(err); }
                 });
             } else {
                 db.run("UPDATE tasks SET done=0 WHERE id IS ?", [id], (err) => {
-                    if (callback) { callback(); }
+                    if (callback) { callback(err); }
                 });
             }
         });
     } else {
         db.run("UPDATE tasks SET done=1 WHERE id IS ?", [id], (err) => {
             if (callback) {
-              callback();
+              callback(err);
             }
         });
     }
@@ -126,11 +127,4 @@ export function import_todotxt(blob: string): void {
             }
         });
     });
-}
-
-function create_table(): void {
-    db.run(`CREATE TABLE IF NOT EXISTS
-            tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                  text TEXT,
-                  done BOOLEAN)`);
 }
