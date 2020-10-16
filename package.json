@@ -11,8 +11,8 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "yarn run tap built/tests/",
-    "test:watch": "yarn run tap --watch built/tests/",
+    "test": "yarn run tap built/tests",
+    "test:watch": "yarn run tap --watch built/tests",
     "start": "node built/yyt.js",
     "server": "node built/server.js",
     "clean": "rm -rf built/"
