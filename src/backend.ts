@@ -2,6 +2,9 @@ import sqlite3 = require('sqlite3')
 
 var db: sqlite3.Database;
 
+/*
+ * Interfaces
+ * */
 export interface ITask {
     id: number,
     text: string,
@@ -12,16 +15,21 @@ export interface IListCallback {
     (tasks: ITask[]): void;
 }
 
+export function set_serialize(yes: boolean) {
+    if (yes) {
+        db.serialize();
+    } else {
+        db.parallelize();
+    }
+}
+
 export function init(path: string, verbose?: boolean, callback?: (err: Error | null) => void): void {
     db = new sqlite3.Database(path);
     if (verbose) {
         sqlite3.verbose();
     }
 
-    db.run(`CREATE TABLE IF NOT EXISTS
-            tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                  text TEXT,
-                  done BOOLEAN)`, callback);
+    create_table(callback);
 }
 
 export function close(): void {
@@ -32,7 +40,7 @@ export function add(text: string, done: boolean = false, callback?: (err: Error 
     db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", [text, done], (err) => {
         if (callback) {
             callback(err);
-        };
+        } 
     });
 }
 
@@ -78,7 +86,7 @@ export function list(callback: IListCallback): void {
 export function reset(): void {
     db.run("DROP TABLE IF EXISTS tasks");
 
-    create_table();
+    create_table(() => {});
 }
 
 export function dump(callback: { (arg0: any[]): void }) {
@@ -127,4 +135,11 @@ export function import_todotxt(blob: string): void {
             }
         });
     });
+}
+
+function create_table(callback: Function) {
+    db.run(`CREATE TABLE IF NOT EXISTS
+            tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                  text TEXT,
+                  done BOOLEAN)`, callback);
 }

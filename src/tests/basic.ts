@@ -8,12 +8,19 @@ t.test('check if we are sane', t => {
     t.end();
 });
 
-t.test('basic db tests', childTest => {
+t.test('backend adds a task and retrieves it', t => {
     backend.init(':memory:', true, (err) => {
-        if (err) { throw err; }
+        if (err) {
+            throw err;
+        }
         backend.add("basic test string", false, (err) => {
-            if (err) { throw err; }
-            childTest.end();
+            if (err) {
+                throw err;
+            }
+            backend.list((tasks) => {
+                t.equal(tasks[0].text, "basic test string");
+                t.end();
+            });
         });
-    );
+    });
 });
