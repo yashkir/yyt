@@ -22,6 +22,7 @@ yargs
     .option('all', {
         alias: 'a',
         describe: 'target all tasks',
+        boolean: true,
     })
     .command('ls', 'list all tasks', {}, (argv) => {
         if (argv.a) {
@@ -31,7 +32,9 @@ yargs
         }
     })
     .command('add <task>', "Add a task to the task list.", {}, (argv) => {
-        add(argv.task as string);
+        console.log(argv);
+        argv._.splice(0, 1, argv.task as string);
+        add(argv._.join(' '));
     })
     .command('do <task_id>', "mark a task as done", {}, (argv) => {
         done(argv.task_id as number);
