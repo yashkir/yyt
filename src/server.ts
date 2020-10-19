@@ -24,6 +24,17 @@ app.get('/tasks', (req, res) => {
     });
 });
 
+app.get('/tasks/add', (req, res) => {
+    let text = req.query['task_text'] as string;
+    if (text.length > 0) {
+        backend.add(text, false, (err) => {
+            res.redirect('..');
+        });
+    } else {
+        res.redirect('..');
+    }
+});
+
 app.get('/tasks/:taskId/done', (req, res) => {
     backend.done(parseInt(req.params.taskId), true, (err) => {
         res.redirect('..');

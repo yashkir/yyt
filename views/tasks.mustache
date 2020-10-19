@@ -5,6 +5,10 @@
   </head>
   <body>
     <h1>Task List</h1>
+    <form action="add/">
+      <input type="submit" value="Add Task">
+      <input type="text" id="task_text" name="task_text">
+    </form>
     {{#each tasks}}
       <ul class="tasks">
         <li {{#if this.isDone}}class="done"{{/if}}>
