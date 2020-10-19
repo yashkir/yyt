@@ -118,7 +118,6 @@ export function export_todotxt(callback: { (arg0: string): void }): void {
                 line = `${task.text}`;
             }
             lines.push(line);
-            console.log(lines);
         });
 
         let blob = lines.join('\n')
