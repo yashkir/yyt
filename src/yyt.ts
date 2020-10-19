@@ -32,7 +32,6 @@ yargs
         }
     })
     .command('add <task>', "Add a task to the task list.", {}, (argv) => {
-        console.log(argv);
         argv._.splice(0, 1, argv.task as string);
         add(argv._.join(' '));
     })
