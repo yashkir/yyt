@@ -10,8 +10,13 @@ ul.tasks {
   border-color: grey;
   border-radius: 2px;
   border-width: 1px;
+  text-decoration: none;
+}
+
+a.checkmark {
+  text-decoration: none;
 }
 
 li.done {
-  background-color: grey;
+  color: darkgrey;
 }
