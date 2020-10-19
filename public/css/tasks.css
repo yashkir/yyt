@@ -5,7 +5,7 @@ h1 {
 ul.tasks {
   list-style-type: none;
   margin: 5px 5px;
-  padding: 2px 2px;
+  padding: 0px 5px;
   border-style: solid;
   border-color: grey;
   border-radius: 2px;
@@ -13,10 +13,25 @@ ul.tasks {
   text-decoration: none;
 }
 
-a.checkmark {
-  text-decoration: none;
-}
-
 li.done {
   color: darkgrey;
 }
+
+a.checkmark {
+  font-size: 130%;
+  color: black;
+  text-decoration: none;
+}
+
+a.checkmark:hover {
+  color: blue;
+}
+
+a.delete {
+  color: darkgrey;
+}
+
+a.delete:hover {
+  color: red;
+}
+

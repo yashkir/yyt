@@ -9,12 +9,14 @@
       <input type="submit" value="Add Task">
       <input type="text" id="task_text" name="task_text">
     </form>
+    <br>
     {{#each tasks}}
       <ul class="tasks">
         <li {{#if this.isDone}}class="done"{{/if}}>
-          <a href="{{this.id}}/delete">[delete]</a> :
           <a href="{{this.id}}/done" class="checkmark">{{#if this.isDone}}&#x2611;{{else}}&#x2610;{{/if}}</a>
-          {{this.text}} : {{this.id}}
+          {{this.text}}
+          <!--{{this.id}}-->
+          <a href="{{this.id}}/delete" class="delete">[delete]</a>
         </li>
       </ul>
     {{/each}}
