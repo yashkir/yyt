@@ -4,7 +4,7 @@ import backend = require('./backend')
 import fs = require('fs')
 import chalk = require('chalk');
 
-const VALID_COMMANDS = ['ls', 'add', 'do', 'resetdb', 'dumpdb', 'export', 'import'];
+const VALID_COMMANDS = ['ls', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import'];
 const DBPATH = '/home/yashkir/tmp/test.db'
 
 const CHALK_DONE = chalk.grey
@@ -38,6 +38,9 @@ yargs
     })
     .command('do <task_id>', "mark a task as done", {}, (argv) => {
         done(argv.task_id as number);
+    })
+    .command('del <task_id>', "delete a task", {}, (argv) => {
+        del(argv.task_id as number);
     })
     .command('resetdb', "reset the database yay", {}, () => {
         resetdb();
@@ -83,6 +86,19 @@ function list(showAll?: boolean) {
 function add(task_text: string) {
     console.log(`adding task: ${task_text}`);
     backend.add(task_text);
+}
+
+function del(task_id: number) {
+    const rl = readline.createInterface(process.stdin, process.stdout);
+
+    console.log(`deleting task: ${task_id}`);
+    // TODO factor confirmation out
+    rl.question("Are you sure? (yes/NO):", (answer) => {
+        if(answer.toLowerCase() == 'yes') {
+            backend.del(task_id);
+        }
+        rl.close();
+    });
 }
 
 function done(task_id: number) {

@@ -44,6 +44,14 @@ export function add(text: string, done: boolean = false, callback?: (err: Error 
     });
 }
 
+export function del(id: number, callback?: (err: Error | null) => void): void {
+    db.run("DELETE FROM tasks WHERE id=?", [id], (err) => {
+        if (callback) {
+            callback(err);
+        } 
+    });
+}
+
 export function done(id: number, toggle?: boolean, callback?: (err: Error | null) => void): void {
     if (toggle) {
         db.get("SELECT done FROM tasks WHERE id IS ?", [id], (err, row) => {
