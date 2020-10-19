@@ -1,3 +1,17 @@
-.done {
-  color: red;
+h1 {
+  font-family: sans-serif;
+}
+
+ul.tasks {
+  list-style-type: none;
+  margin: 5px 5px;
+  padding: 0;
+  border-style: solid;
+  border-color: grey;
+  border-radius: 2px;
+  border-width: 1px;
+}
+
+li.done {
+  background-color: grey;
 }

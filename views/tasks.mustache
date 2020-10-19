@@ -6,7 +6,7 @@
   <body>
     <h1>Task List</h1>
     {{#each tasks}}
-      <ul>
+      <ul class="tasks">
         <li {{#if this.isDone}}class="done"{{/if}}>
           <a href="{{this.id}}/done">[done]</a> : 
           <a href="{{this.id}}/delete">[delete]</a> :
