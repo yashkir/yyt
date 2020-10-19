@@ -30,6 +30,12 @@ app.get('/tasks/:taskId/done', (req, res) => {
     });
 });
 
+app.get('/tasks/:taskId/delete', (req, res) => {
+    backend.del(parseInt(req.params.taskId), (err) => {
+        res.redirect('..');
+    });
+});
+
 app.listen(port, () => {
     console.log(`Sever running at http://localhost:${port}`);
 });
