@@ -1,6 +1,8 @@
 import t = require('tap')
 import backend = require('../backend')
 
+var USERID = 'testid';
+
 t.test('check if we are sane', t => {
     t.equal(1,1,'one is equal to one');
     //t.equal(backend.init(':memory:'), true, 'backend init() returns true');
@@ -13,11 +15,11 @@ t.test('backend adds a task and retrieves it', t => {
         if (err) {
             throw err;
         }
-        backend.add("basic test string", false, (err) => {
+        backend.add(USERID, "basic test string", false, (err) => {
             if (err) {
                 throw err;
             }
-            backend.list((tasks) => {
+            backend.list(USERID, (tasks) => {
                 t.equal(tasks[0].text, "basic test string");
                 t.end();
             });

@@ -14,12 +14,14 @@ let t2 = handlebars.compile(fs.readFileSync('views/tasks.mustache').toString());
 
 app.use(express.static("public"));
 
+var USERID = 'yashkir55';
+
 app.get('/', (req, res) => {
     res.send(t1( { name: 'test'} ));
 });
 
 app.get('/tasks', (req, res) => {
-    backend.list((tasks) => {
+    backend.list(USERID, (tasks) => {
         res.send(t2( { tasks: tasks } ));
     });
 });
@@ -27,7 +29,7 @@ app.get('/tasks', (req, res) => {
 app.get('/tasks/add', (req, res) => {
     let text = req.query['task_text'] as string;
     if (text.length > 0) {
-        backend.add(text, false, (err) => {
+        backend.add(USERID, text, false, (err) => {
             res.redirect('..');
         });
     } else {
@@ -36,13 +38,13 @@ app.get('/tasks/add', (req, res) => {
 });
 
 app.get('/tasks/:taskId/done', (req, res) => {
-    backend.done(parseInt(req.params.taskId), true, (err) => {
+    backend.done(USERID, parseInt(req.params.taskId), true, (err) => {
         res.redirect('..');
     });
 });
 
 app.get('/tasks/:taskId/delete', (req, res) => {
-    backend.del(parseInt(req.params.taskId), (err) => {
+    backend.del(USERID, parseInt(req.params.taskId), (err) => {
         res.redirect('..');
     });
 });

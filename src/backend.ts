@@ -36,37 +36,38 @@ export function close(): void {
     db.close();
 }
 
-export function add(text: string, done: boolean = false, callback?: (err: Error | null) => void): void {
-    db.run("INSERT INTO tasks (text, done) VALUES (?, ?)", [text, done], (err) => {
+export function add(user_id: string, text: string, done: boolean = false, 
+                    callback?: (err: Error | null) => void): void {
+    db.run(`INSERT INTO tasks_${user_id} (text, done) VALUES (?, ?)`, [text, done], (err) => {
         if (callback) {
             callback(err);
         } 
     });
 }
 
-export function del(id: number, callback?: (err: Error | null) => void): void {
-    db.run("DELETE FROM tasks WHERE id=?", [id], (err) => {
+export function del(user_id: string, id: number, callback?: (err: Error | null) => void): void {
+    db.run(`DELETE FROM tasks_${user_id} WHERE id=?`, [id], (err) => {
         if (callback) {
             callback(err);
         } 
     });
 }
 
-export function done(id: number, toggle?: boolean, callback?: (err: Error | null) => void): void {
+export function done(user_id: string, id: number, toggle?: boolean, callback?: (err: Error | null) => void): void {
     if (toggle) {
-        db.get("SELECT done FROM tasks WHERE id IS ?", [id], (err, row) => {
+        db.get(`SELECT done FROM tasks_${user_id} WHERE id IS ?`, [id], (err, row) => {
             if (row.done == 0) {
-                db.run("UPDATE tasks SET done=1 WHERE id IS ?", [id], (err) => {
+                db.run(`UPDATE tasks_${user_id} SET done=1 WHERE id IS ?`, [id], (err) => {
                     if (callback) { callback(err); }
                 });
             } else {
-                db.run("UPDATE tasks SET done=0 WHERE id IS ?", [id], (err) => {
+                db.run(`UPDATE tasks_${user_id} SET done=0 WHERE id IS ?`, [id], (err) => {
                     if (callback) { callback(err); }
                 });
             }
         });
     } else {
-        db.run("UPDATE tasks SET done=1 WHERE id IS ?", [id], (err) => {
+        db.run(`UPDATE tasks_${user_id} SET done=1 WHERE id IS ?`, [id], (err) => {
             if (callback) {
               callback(err);
             }
@@ -74,9 +75,9 @@ export function done(id: number, toggle?: boolean, callback?: (err: Error | null
     }
 }
 
-export function list(callback: IListCallback): void {
+export function list(user_id: string, callback: IListCallback): void {
     let tasks: ITask[] = [];
-    db.all("SELECT id, text, done FROM tasks", (error, rows) => {
+    db.all(`SELECT id, text, done FROM tasks_${user_id}`, (error, rows) => {
         if (error) {
             throw error;
         }
@@ -91,12 +92,14 @@ export function list(callback: IListCallback): void {
     });
 }
 
+// TODO
 export function reset(): void {
     db.run("DROP TABLE IF EXISTS tasks");
 
     create_table(() => {});
 }
 
+// TODO
 export function dump(callback: { (arg0: any[]): void }) {
     db.all("SELECT * FROM tasks", (error, rows) => {
         if (error) {
@@ -106,10 +109,10 @@ export function dump(callback: { (arg0: any[]): void }) {
     });
 }
 
-export function export_todotxt(callback: { (arg0: string): void }): void {
+export function export_todotxt(user_id: string, callback: { (arg0: string): void }): void {
     let lines: string[] = [];
 
-    list((tasks: ITask[]) => {
+    list(user_id, (tasks: ITask[]) => {
         tasks.forEach((task) => {
             let line: string;
             if (task.isDone) {
@@ -129,21 +132,22 @@ export function export_todotxt(callback: { (arg0: string): void }): void {
  * Load a 'todo.txt' formatted string into the database.
  * WARNING: resets the database.
  */
-export function import_todotxt(blob: string): void {
+export function import_todotxt(user_id: string, blob: string): void {
     let lines = blob.split('\n');
 
     db.serialize(() => {
         reset();
         lines.forEach((line) => {
             if (/^x /.test(line)) {
-                add(line.replace(/^x /, ''), true);
+                add(user_id, line.replace(/^x /, ''), true);
             } else if (line.length > 0) {
-                add(line);
+                add(user_id, line);
             }
         });
     });
 }
 
+// TODO
 function create_table(callback: Function) {
     db.run(`CREATE TABLE IF NOT EXISTS
             tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

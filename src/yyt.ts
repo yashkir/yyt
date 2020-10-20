@@ -3,7 +3,6 @@ import yargs = require("yargs");
 import backend = require('./backend')
 import fs = require('fs')
 import chalk = require('chalk');
-import repl = require('repl');
 
 const VALID_COMMANDS = ['ls', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import', 'create'];
 const DBPATH = '/home/yashkir/tmp/test.db'
@@ -56,10 +55,11 @@ yargs
         import_todotxt(argv.filename as string);
     })
     .command('create <user_id>', "Create a table for a user", {}, (argv) => {
-        backend.create_table_for_user(argv.user_id as string, (err) => {
+        backend.create_table_for_user(argv.user_id as string, (err: Error) => {
             if (err) {
                 console.log(err);
-            });
+            }
+        });
     })
     .demandCommand(1)
     .check((argv) => {
@@ -75,10 +75,8 @@ yargs
 /* These commands are run by yargs */
 
 function list(showAll?: boolean) {
-    backend.list((tasks) => {
+    backend.list(USER_ID, (tasks) => {
         tasks.forEach((task) => {
-            let line: string;
-
             if (task.isDone) {
                 if (showAll) {
                     console.log(CHALK_DONE( `${task.id} : DONE : ${task.text}` ))
@@ -92,7 +90,7 @@ function list(showAll?: boolean) {
 
 function add(task_text: string) {
     console.log(`adding task: ${task_text}`);
-    backend.add(task_text);
+    backend.add(USER_ID, task_text);
 }
 
 function del(task_id: number) {
@@ -102,7 +100,7 @@ function del(task_id: number) {
     // TODO factor confirmation out
     rl.question("Are you sure? (yes/NO):", (answer) => {
         if(answer.toLowerCase() == 'yes') {
-            backend.del(task_id);
+            backend.del(USER_ID, task_id);
         }
         rl.close();
     });
@@ -110,7 +108,7 @@ function del(task_id: number) {
 
 function done(task_id: number) {
     console.log(`Doing task: ${task_id}`);
-    backend.done(task_id);
+    backend.done(USER_ID, task_id);
 }
 
 function resetdb() {
@@ -132,7 +130,7 @@ function dumpdb() {
 }
 
 function export_todotxt(filename: string) {
-    backend.export_todotxt((blob) => {
+    backend.export_todotxt(USER_ID, (blob) => {
         fs.writeFile(filename, blob, (err) => {
             if (err) {
                 console.log(err);
@@ -146,7 +144,7 @@ function import_todotxt(filename: string) {
         if (err) {
             console.log(err);
         } else {
-            backend.import_todotxt(data);
+            backend.import_todotxt(USER_ID, data);
         }
     });
 }
