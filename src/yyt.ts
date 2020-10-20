@@ -25,6 +25,7 @@ yargs
         describe: 'target all tasks',
         boolean: true,
     })
+    // TODO username option
     .command('ls', 'list all tasks', {}, (argv) => {
         if (argv.a) {
             list(true);
@@ -117,14 +118,14 @@ function resetdb() {
     rl.write("RESETTING THE DATABASE\n");
     rl.question("Are you sure? (yes/NO):", (answer) => {
         if(answer == 'yes') {
-            backend.reset();
+            backend.reset(USER_ID);
         }
         rl.close();
     });
 }
 
 function dumpdb() {
-    backend.dump( (rows: any[]) => {
+    backend.dump(USER_ID, (rows: any[]) => {
         console.table(rows);
     });
 }

@@ -29,7 +29,7 @@ export function init(path: string, verbose?: boolean, callback?: (err: Error | n
         sqlite3.verbose();
     }
 
-    create_table(callback);
+    //create_table(callback);
 }
 
 export function close(): void {
@@ -92,16 +92,14 @@ export function list(user_id: string, callback: IListCallback): void {
     });
 }
 
-// TODO
-export function reset(): void {
-    db.run("DROP TABLE IF EXISTS tasks");
+export function reset(user_id: string): void {
+    db.run(`DROP TABLE IF EXISTS tasks_${user_id}`);
 
-    create_table(() => {});
+    create_table_for_user(user_id, () => {});
 }
 
-// TODO
-export function dump(callback: { (arg0: any[]): void }) {
-    db.all("SELECT * FROM tasks", (error, rows) => {
+export function dump(user_id: string, callback: { (arg0: any[]): void }) {
+    db.all(`SELECT * FROM tasks_${user_id}`, (error, rows) => {
         if (error) {
             throw error;
         }
@@ -136,7 +134,7 @@ export function import_todotxt(user_id: string, blob: string): void {
     let lines = blob.split('\n');
 
     db.serialize(() => {
-        reset();
+        reset(user_id);
         lines.forEach((line) => {
             if (/^x /.test(line)) {
                 add(user_id, line.replace(/^x /, ''), true);
