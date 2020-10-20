@@ -2,9 +2,12 @@ import express = require('express');
 import handlebars = require('handlebars');
 import fs = require('fs');
 import backend = require('./backend');
+import uuid = require('uuid');
+import session = require('express-session');
 
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
-const app = express();
+const USERID = 'yashkir55';
+const SECRET = 'very secret';
 const port = 8080;
 
 backend.init(DBPATH);
@@ -12,12 +15,22 @@ backend.init(DBPATH);
 let t1 = handlebars.compile(fs.readFileSync('views/index.mustache').toString());
 let t2 = handlebars.compile(fs.readFileSync('views/tasks.mustache').toString());
 
+const app = express();
+
 app.use(express.static("public"));
 
-var USERID = 'yashkir55';
+app.use(session({
+    genid: (req) => {
+        return uuid.v4();
+    },
+    secret: SECRET,
+    resave: false,
+    saveUninitialized: true
+}))
 
 app.get('/', (req, res) => {
-    res.send(t1( { name: 'test'} ));
+    console.log("Have ID: " + req.sessionID);
+    res.send(t1( { name: 'test' } ));
 });
 
 app.get('/tasks', (req, res) => {
