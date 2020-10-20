@@ -2188,6 +2188,11 @@ node-gyp@3.x:
     tar "^2.0.0"
     which "1"
 
+node-inspect@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/node-inspect/-/node-inspect-2.0.0.tgz#31e6be6e877fb35d4c7bcd4c6e5cd8c5209477fc"
+  integrity sha512-vaDNU6Fa/vt8gv/PV+QoeSIPhcBnHMiNOtInxcojfagspQg5KP9HloUDGJWIacamT8Agiu51eF+fuBjrE25a6w==
+
 node-modules-regexp@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-modules-regexp/-/node-modules-regexp-1.0.0.tgz#8d9dbe28964a4ac5712e9131642107c71e90ec40"

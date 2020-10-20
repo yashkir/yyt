@@ -150,3 +150,11 @@ function create_table(callback: Function) {
                   text TEXT,
                   done BOOLEAN)`, callback);
 }
+
+export function create_table_for_user(user_id: string, callback: Function) {
+    // TODO Sanitize table name
+    db.run(`CREATE TABLE IF NOT EXISTS
+            tasks_${user_id} (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                  text TEXT,
+                  done BOOLEAN)`, [], callback);
+}

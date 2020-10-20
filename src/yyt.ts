@@ -3,9 +3,11 @@ import yargs = require("yargs");
 import backend = require('./backend')
 import fs = require('fs')
 import chalk = require('chalk');
+import repl = require('repl');
 
-const VALID_COMMANDS = ['ls', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import'];
+const VALID_COMMANDS = ['ls', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import', 'create'];
 const DBPATH = '/home/yashkir/tmp/test.db'
+const USER_ID = 'yashkir55'
 
 const CHALK_DONE = chalk.grey
 
@@ -52,6 +54,12 @@ yargs
     })
     .command('import <filename>', "import a todo.txt formatted file, erases the DB", {}, (argv) => {
         import_todotxt(argv.filename as string);
+    })
+    .command('create <user_id>', "Create a table for a user", {}, (argv) => {
+        backend.create_table_for_user(argv.user_id as string, (err) => {
+            if (err) {
+                console.log(err);
+            });
     })
     .demandCommand(1)
     .check((argv) => {
