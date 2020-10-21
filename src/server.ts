@@ -4,6 +4,9 @@ import fs = require('fs');
 import backend = require('./backend');
 import uuid = require('uuid');
 import session = require('express-session');
+import session_file_store = require('session-file-store');
+
+const FileStore = session_file_store(session);
 
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
 const USERID = 'yashkir55';
@@ -23,13 +26,19 @@ app.use(session({
     genid: (req) => {
         return uuid.v4();
     },
+    store: new FileStore(),
     secret: SECRET,
     resave: false,
     saveUninitialized: true
-}))
+}));
+
+// Dev Logger
+app.use((req, res, next) => {
+    console.log("Middleware> Req ID: " + req.sessionID);
+    next();
+});
 
 app.get('/', (req, res) => {
-    console.log("Have ID: " + req.sessionID);
     res.send(t1( { name: 'test' } ));
 });
 
