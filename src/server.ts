@@ -5,6 +5,7 @@ import backend = require('./backend');
 import uuid = require('uuid');
 import session = require('express-session');
 import session_file_store = require('session-file-store');
+import bodyParser = require('body-parser');
 
 const FileStore = session_file_store(session);
 
@@ -22,6 +23,8 @@ const app = express();
 
 app.use(express.static("public"));
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(session({
     genid: (req) => {
         return uuid.v4();
@@ -31,8 +34,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-
-// Dev Logger
 app.use((req, res, next) => {
     console.log("Middleware> Req ID: " + req.sessionID);
     next();
@@ -40,6 +41,15 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
     res.send(t1( { name: 'test' } ));
+});
+
+app.get('/login', (req, res) => {
+    res.send("You got login.");
+});
+
+app.post('/login', (req, res) => {
+    res.send("You posted to login.");
+    console.log(req.body);
 });
 
 app.get('/tasks', (req, res) => {
