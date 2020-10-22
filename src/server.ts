@@ -6,13 +6,50 @@ import uuid = require('uuid');
 import session = require('express-session');
 import session_file_store = require('session-file-store');
 import bodyParser = require('body-parser');
+import passport = require('passport');
+import { Strategy as LocalStrategy } from 'passport-local';
 
 const FileStore = session_file_store(session);
+
+type userRecord = {
+    id:       string,
+    username: string,
+    email:    string,
+    password: string,
+}
+
+const users: userRecord[] = [
+    {id: 'smgg5566', username: 'test', email: 'test@test.com', password: 'password'}
+];
 
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
 const USERID = 'yashkir55';
 const SECRET = 'very secret';
 const port = 8080;
+
+passport.use(new LocalStrategy(
+    (username, password, done) => {
+        // TODO find used based on name
+        const user = users[0];
+        if (username == user.username && password == user.password) {
+            return done(null, user);
+        }
+    })
+);
+
+passport.serializeUser((user: userRecord, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+    // TODO db call
+    if (users[0].id == id) {
+       const user = users[0];
+    } else {
+       const user = false;
+    } 
+    done(null, user);    
+});
 
 backend.init(DBPATH);
 
@@ -34,6 +71,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use((req, res, next) => {
     console.log("Middleware> Req ID: " + req.sessionID);
     next();
@@ -47,9 +86,26 @@ app.get('/login', (req, res) => {
     res.send("You got login.");
 });
 
-app.post('/login', (req, res) => {
-    res.send("You posted to login.");
+app.post('/login', (req, res, next) => {
+    //res.send("You posted to login.");
     console.log(req.body);
+    passport.authenticate('local', (err, user, info) => {
+        console.log(`req.session.passport: ${JSON.stringify(req.session.passport)}`)
+        console.log(`req.user: ${JSON.stringify(req.user)}`)
+        req.login(user, (err) => {
+            console.log(`req.session.passport: ${JSON.stringify(req.session.passport)}`)
+            console.log(`req.user: ${JSON.stringify(req.user)}`)
+            return res.send('Logged in.');
+        });
+    })(req, res, next);
+});
+
+app.get('/authtest', (req, res) => {
+   if (req.isAuthenticated()) {
+      res.send("Authenticated is true");
+   } else {
+      res.redirect('/');
+   }
 });
 
 app.get('/tasks', (req, res) => {
