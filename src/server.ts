@@ -43,10 +43,11 @@ passport.serializeUser((user: userRecord, done) => {
 
 passport.deserializeUser((id, done) => {
     // TODO db call
+    let user;
     if (users[0].id == id) {
-       const user = users[0];
+       user = users[0];
     } else {
-       const user = false;
+       user = false;
     } 
     done(null, user);    
 });
