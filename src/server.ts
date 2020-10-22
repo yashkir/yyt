@@ -11,28 +11,29 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import * as backend from './backend';
 import * as usersDb from './db/users';
 
-const FileStore = session_file_store(session);
-
-const users: usersDb.IUserRecord[] = [
-    {id: 'smgg5566', username: 'test', email: 'test@test.com', password: 'password'}
-];
-
+/* -------------------------------------------------------------------------- 
+ * Constants, likely to be swapped out in the future
+ * ----------------------------------------------------------------------- */
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
 const USERID = 'yashkir55';
 const SECRET = 'very secret';
 const port = 8080;
 
+/* -------------------------------------------------------------------------- 
+ * Initial setup and configuration
+ * ----------------------------------------------------------------------- */
+const FileStore = session_file_store(session);
+
 passport.use(new LocalStrategy(
     (username, password, done) => {
-        // TODO find used based on name
-        // const user = users[0];
-        usersDb.getUserByUsername(DBPATH, username, (user) => {
-            if (username == user.username && password == user.password) {
-                console.log(`found ${user.username}`);
+        usersDb.getUserByUsername(DBPATH, username, (err, user) => {
+            if (err) console.log(err);
+            if (user && username == user.username && password == user.password) {
+                console.log(`Authenticated ${username}`);
                 return done(null, user);
             } else {
-                console.log(`cant find ${user.username}`);
-                return done(new Error("Can't find user"));
+                console.log(`Can't authenticate ${username}`);
+                return done(null, false, { message: "Invalid User.\n" });
             }
         });
     })
@@ -43,27 +44,27 @@ passport.serializeUser((user: usersDb.IUserRecord, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    // TODO db call
-    usersDb.getUserById(DBPATH, id as string, (user) => {
-        done(null, user);
+    usersDb.getUserById(DBPATH, id as string, (err, user) => {
+        if (!err) {
+            done(null, user);
+        } else {
+            done(err, false);
+        }
     });
-    //let user;
-    //if (users[0].id == id) {
-       //user = users[0];
-    //} else {
-       //user = false;
-    //}
-    //done(null, user);
 });
+
 backend.init(DBPATH);
 
+// These are the only two templates we currently use
 let t1 = handlebars.compile(fs.readFileSync('views/index.mustache').toString());
 let t2 = handlebars.compile(fs.readFileSync('views/tasks.mustache').toString());
 
 const app = express();
 
+/* -------------------------------------------------------------------------- 
+ * Middlware
+ * ----------------------------------------------------------------------- */
 app.use(express.static("public"));
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
@@ -77,11 +78,15 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+// This is just a debugging logger
 app.use((req, res, next) => {
-    console.log("Middleware> Req ID: " + req.sessionID);
+    console.log("Log> Req UUID: " + req.sessionID);
     next();
 });
 
+/* -------------------------------------------------------------------------- 
+ * Routes
+ * ----------------------------------------------------------------------- */
 app.get('/', (req, res) => {
     res.send(t1( { name: 'test' } ));
 });
@@ -91,15 +96,13 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res, next) => {
-    //res.send("You posted to login.");
-    console.log(req.body);
     passport.authenticate('local', (err, user, info) => {
-        console.log(`req.session.passport: ${JSON.stringify(req.session.passport)}`)
-        console.log(`req.user: ${JSON.stringify(req.user)}`)
         req.login(user, (err) => {
-            console.log(`req.session.passport: ${JSON.stringify(req.session.passport)}`)
-            console.log(`req.user: ${JSON.stringify(req.user)}`)
-            return res.send('Logged in.');
+            if (!err) {
+                return res.send('Logged in.');
+            } else {
+                return res.redirect('/');
+            }
         });
     })(req, res, next);
 });
@@ -141,6 +144,9 @@ app.get('/tasks/:taskId/delete', (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- 
+ * Start the Server !
+ * ----------------------------------------------------------------------- */
 app.listen(port, () => {
-    console.log(`Sever running at http://localhost:${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });

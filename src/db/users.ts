@@ -7,27 +7,19 @@ export interface IUserRecord {
     password: string,
 }
 
-function parseRowToUserRecord(row: any): IUserRecord {
-    const user: IUserRecord = {
-        id: row.id,
-        username: row.username, 
-        email: row.email,
-        password: row.password,
-    };
-    return user;
-};
-
-export function getUserById(path: string, id: string, callback?: (user: IUserRecord) => void) {
+export function getUserById(path: string, id: string,
+                            callback?: (err: Error, user: IUserRecord | null) => void) {
     let db = new sqlite3.Database(path);
     db.get("SELECT id, username, email, password FROM users WHERE id=?", [id], (err, row) => {
-        callback( parseRowToUserRecord(row) );
+        callback(err, parseRowToUserRecord(row));
     });
 }
 
-export function getUserByUsername(path: string, username: string, callback?: (user: IUserRecord) => void) {
+export function getUserByUsername(path: string, username: string,
+                                  callback?: (err: Error, user: IUserRecord | null) => void) {
     let db = new sqlite3.Database(path);
     db.get("SELECT id, username, email, password FROM users WHERE username=?", [username], (err, row) => {
-        callback( parseRowToUserRecord(row) );
+        callback(err, parseRowToUserRecord(row));
     });
 }
 
@@ -51,11 +43,21 @@ export function dropUserTable(path: string, callback?: (err: Error) => void) {
     db.run("DROP TABLE IF EXISTS users", err => callback(err));
 }
 
-const path = '/home/yashkir/tmp/test.db';
-
-//createUserTable(path, (err) => {
-    //if (err) console.log(err);
-    //addUser(path, 
-            //{id: 'smg56633', username: 'test', email: 'test@test.com', password: 'password'},
-            //(err) => { if (err) console.log(err) });
-//});
+function parseRowToUserRecord(row: any): IUserRecord | null {
+    try {
+        const user: IUserRecord = {
+            id: row.id,
+            username: row.username,
+            email: row.email,
+            password: row.password,
+        };
+        return user;
+    } catch (error) {
+        if (error instanceof TypeError) {
+            console.log(error);
+            return null;
+        } else {
+            throw error;
+        }
+    }
+};
