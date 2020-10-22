@@ -1,7 +1,6 @@
 import express = require('express');
 import handlebars = require('handlebars');
 import fs = require('fs');
-import backend = require('./backend');
 import uuid = require('uuid');
 import session = require('express-session');
 import session_file_store = require('session-file-store');
@@ -9,16 +8,12 @@ import bodyParser = require('body-parser');
 import passport = require('passport');
 import { Strategy as LocalStrategy } from 'passport-local';
 
+import * as backend from './backend';
+import * as usersDb from './db/users';
+
 const FileStore = session_file_store(session);
 
-type userRecord = {
-    id:       string,
-    username: string,
-    email:    string,
-    password: string,
-}
-
-const users: userRecord[] = [
+const users: usersDb.IUserRecord[] = [
     {id: 'smgg5566', username: 'test', email: 'test@test.com', password: 'password'}
 ];
 
@@ -30,28 +25,36 @@ const port = 8080;
 passport.use(new LocalStrategy(
     (username, password, done) => {
         // TODO find used based on name
-        const user = users[0];
-        if (username == user.username && password == user.password) {
-            return done(null, user);
-        }
+        // const user = users[0];
+        usersDb.getUserByUsername(DBPATH, username, (user) => {
+            if (username == user.username && password == user.password) {
+                console.log(`found ${user.username}`);
+                return done(null, user);
+            } else {
+                console.log(`cant find ${user.username}`);
+                return done(new Error("Can't find user"));
+            }
+        });
     })
 );
 
-passport.serializeUser((user: userRecord, done) => {
+passport.serializeUser((user: usersDb.IUserRecord, done) => {
     done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
     // TODO db call
-    let user;
-    if (users[0].id == id) {
-       user = users[0];
-    } else {
-       user = false;
-    } 
-    done(null, user);    
+    usersDb.getUserById(DBPATH, id as string, (user) => {
+        done(null, user);
+    });
+    //let user;
+    //if (users[0].id == id) {
+       //user = users[0];
+    //} else {
+       //user = false;
+    //}
+    //done(null, user);
 });
-
 backend.init(DBPATH);
 
 let t1 = handlebars.compile(fs.readFileSync('views/index.mustache').toString());

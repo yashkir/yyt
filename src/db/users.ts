@@ -1,26 +1,37 @@
 import sqlite3 = require('sqlite3')
 
-type userRecord = {
+export interface IUserRecord {
     id:       string,
     username: string,
     email:    string,
     password: string,
 }
 
-export function getUserById(path: string, id: string, callback?: (user: userRecord) => void) {
+function parseRowToUserRecord(row: any): IUserRecord {
+    const user: IUserRecord = {
+        id: row.id,
+        username: row.username, 
+        email: row.email,
+        password: row.password,
+    };
+    return user;
+};
+
+export function getUserById(path: string, id: string, callback?: (user: IUserRecord) => void) {
     let db = new sqlite3.Database(path);
-    db.get("SELECT id, username, email, password FROM users", (err, row) => {
-        const user: userRecord = {
-            id: row.id,
-            username: row.username, 
-            email: row.email,
-            password: row.password,
-        };
-        callback(user);
+    db.get("SELECT id, username, email, password FROM users WHERE id=?", [id], (err, row) => {
+        callback( parseRowToUserRecord(row) );
     });
 }
 
-export function addUser(path: string, user: userRecord, callback?: (err: Error) => void) {
+export function getUserByUsername(path: string, username: string, callback?: (user: IUserRecord) => void) {
+    let db = new sqlite3.Database(path);
+    db.get("SELECT id, username, email, password FROM users WHERE username=?", [username], (err, row) => {
+        callback( parseRowToUserRecord(row) );
+    });
+}
+
+export function addUser(path: string, user: IUserRecord, callback?: (err: Error) => void) {
     let db = new sqlite3.Database(path);
     db.run("INSERT INTO users (id, username, email, password) VALUES(?,?,?,?)",
             [user.id, user.username, user.email, user.password],
