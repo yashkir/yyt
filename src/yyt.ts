@@ -5,7 +5,7 @@
  * ----------------------------------------------------------------------- */
 import readline = require('readline');
 import yargs = require("yargs");
-import backend = require('./backend')
+import backend = require('./db/backend')
 import fs = require('fs')
 import chalk = require('chalk');
 

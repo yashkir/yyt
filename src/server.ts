@@ -14,7 +14,7 @@ import bodyParser = require('body-parser');
 import passport = require('passport');
 import { Strategy as LocalStrategy } from 'passport-local';
 
-import * as backend from './backend';
+import * as backend from './db/backend';
 import * as usersDb from './db/users';
 
 /* -------------------------------------------------------------------------- 

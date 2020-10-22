@@ -1,5 +1,5 @@
 import t = require('tap')
-import backend = require('../backend')
+import backend = require('../db/backend')
 
 var USERID = 'testid';
 
