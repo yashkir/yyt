@@ -1,3 +1,9 @@
+/* -------------------------------------------------------------------------- 
+ * server
+ *
+ * This server is a front for the two database interfaces. We handle all
+ * sessions, authentication, templating, and interaction.
+ * ----------------------------------------------------------------------- */
 import express = require('express');
 import handlebars = require('handlebars');
 import fs = require('fs');

@@ -1,5 +1,13 @@
+/* -------------------------------------------------------------------------- 
+ * users
+ *
+ * Provide functions for accessing the 'users' table of our database. 
+ * ----------------------------------------------------------------------- */
 import sqlite3 = require('sqlite3')
 
+/* -------------------------------------------------------------------------- 
+ * Exports
+ * ----------------------------------------------------------------------- */
 export interface IUserRecord {
     id:       string,
     username: string,
@@ -43,6 +51,9 @@ export function dropUserTable(path: string, callback?: (err: Error) => void) {
     db.run("DROP TABLE IF EXISTS users", err => callback(err));
 }
 
+/* -------------------------------------------------------------------------- 
+ * Local functions
+ * ----------------------------------------------------------------------- */
 function parseRowToUserRecord(row: any): IUserRecord | null {
     try {
         const user: IUserRecord = {

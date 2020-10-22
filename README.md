@@ -23,18 +23,27 @@ $ node built/yyt.js do 1
 npm run server
 ```
 ## Dependencies
-
+```
+yarn
+```
 ### npm live
 ```
-sqlite
-express
-handlebars
-yargs
+body-parser
 chalk
+express
+express-session
+handlebars
+passport
+passport-local
+session-file-store
+sqlite3
+uuid
+yargs
 ```
 ### npm dev
 ```
 typescript
+nodemon
 tap
 ```
 ## MIT License

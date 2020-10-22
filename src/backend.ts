@@ -1,10 +1,16 @@
+/* -------------------------------------------------------------------------- 
+ * backend
+ *
+ * Provides functions for accessing and manipulating the 'tasks_${username}'
+ * tables. Must be initialized to connect to the DB before use.
+ * ----------------------------------------------------------------------- */
 import sqlite3 = require('sqlite3')
 
 var db: sqlite3.Database;
 
-/*
- * Interfaces
- * */
+/* -------------------------------------------------------------------------- 
+ * Interface Exports
+ * ----------------------------------------------------------------------- */
 export interface ITask {
     id: number,
     text: string,
@@ -15,6 +21,9 @@ export interface IListCallback {
     (tasks: ITask[]): void;
 }
 
+/* -------------------------------------------------------------------------- 
+ * Function Exports
+ * ----------------------------------------------------------------------- */
 export function set_serialize(yes: boolean) {
     if (yes) {
         db.serialize();
@@ -126,10 +135,8 @@ export function export_todotxt(user_id: string, callback: { (arg0: string): void
     });
 }
 
-/**
- * Load a 'todo.txt' formatted string into the database.
- * WARNING: resets the database.
- */
+/* Load a 'todo.txt' formatted string into the database.
+ * WARNING: resets the database.  */
 export function import_todotxt(user_id: string, blob: string): void {
     let lines = blob.split('\n');
 
@@ -145,13 +152,6 @@ export function import_todotxt(user_id: string, blob: string): void {
     });
 }
 
-// TODO
-function create_table(callback: Function) {
-    db.run(`CREATE TABLE IF NOT EXISTS
-            tasks(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                  text TEXT,
-                  done BOOLEAN)`, callback);
-}
 
 export function create_table_for_user(user_id: string, callback: Function) {
     // TODO Sanitize table name

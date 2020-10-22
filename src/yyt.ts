@@ -1,3 +1,8 @@
+/* -------------------------------------------------------------------------- 
+ * yyt
+ *
+ * CLI interface to manage tasks stored in an SQLite database.
+ * ----------------------------------------------------------------------- */
 import readline = require('readline');
 import yargs = require("yargs");
 import backend = require('./backend')
@@ -7,17 +12,13 @@ import chalk = require('chalk');
 const VALID_COMMANDS = ['ls', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import', 'create'];
 const DBPATH = '/home/yashkir/tmp/test.db'
 const USER_ID = 'yashkir55'
-
 const CHALK_DONE = chalk.grey
-
-
-/* Open the DB */
 
 backend.init(DBPATH);
 
-
-/* Parse  Arguments */
-
+/* -------------------------------------------------------------------------- 
+ * Set up yargs, it manages the whole front-end.
+ * ----------------------------------------------------------------------- */
 yargs
     .usage("Usage: $0 <command> <id/text>")
     .option('all', {
@@ -72,8 +73,9 @@ yargs
     })
     .argv;
 
-
-/* These commands are run by yargs */
+/* -------------------------------------------------------------------------- 
+ * Commands to be run by yargs
+ * ----------------------------------------------------------------------- */
 
 function list(showAll?: boolean) {
     backend.list(USER_ID, (tasks) => {
