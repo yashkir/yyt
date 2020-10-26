@@ -6,6 +6,7 @@
  * ----------------------------------------------------------------------- */
 import express = require('express');
 import handlebars = require('handlebars');
+import exphbs = require('express-handlebars');
 import fs = require('fs');
 import uuid = require('uuid');
 import session = require('express-session');
@@ -64,16 +65,14 @@ passport.deserializeUser((id, done) => {
 
 backend.init(DBPATH);
 
-// These are the only two templates we currently use
-let t1 = handlebars.compile(fs.readFileSync('views/index.handlebars').toString());
-let t2 = handlebars.compile(fs.readFileSync('views/tasks.handlebars').toString());
-let t_login = handlebars.compile(fs.readFileSync('views/login.handlebars').toString());
-
-const app = express();
-
 /* -------------------------------------------------------------------------- 
  * Middlware
  * ----------------------------------------------------------------------- */
+const app = express();
+
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
+
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -98,11 +97,11 @@ app.use((req, res, next) => {
  * Routes
  * ----------------------------------------------------------------------- */
 app.get('/', (req, res) => {
-    res.send(t1( { name: 'test' } ));
+    res.render('index', {name: 'stranger'});
 });
 
 app.get('/login', (req, res) => {
-    res.send(t_login({ }));
+    res.render('login', {title: 'Login'});
 });
 
 app.post('/login', (req, res, next) => {
@@ -131,7 +130,7 @@ app.get('/authtest', (req, res) => {
 
 app.get('/tasks', (req, res) => {
     backend.list(USERID, (tasks) => {
-        res.send(t2( { tasks: tasks } ));
+        res.render('tasks', {tasks: tasks});
     });
 });
 
