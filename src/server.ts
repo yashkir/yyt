@@ -103,12 +103,12 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
+        if (info) { return res.send(info.message) };
+        if (err)  { return next(err); }
+        if (!user){ return res.redirect('/') };
         req.login(user, (err) => {
-            if (!err) {
-                return res.send('Logged in.');
-            } else {
-                return res.redirect('/');
-            }
+            if (err)  { return next(err); }
+            return res.redirect('/authtest');
         });
     })(req, res, next);
 });
