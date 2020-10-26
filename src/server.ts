@@ -67,6 +67,7 @@ backend.init(DBPATH);
 // These are the only two templates we currently use
 let t1 = handlebars.compile(fs.readFileSync('views/index.mustache').toString());
 let t2 = handlebars.compile(fs.readFileSync('views/tasks.mustache').toString());
+let t_login = handlebars.compile(fs.readFileSync('views/login.mustache').toString());
 
 const app = express();
 
@@ -101,7 +102,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.send("You got login.");
+    res.send(t_login({ }));
 });
 
 app.post('/login', (req, res, next) => {
