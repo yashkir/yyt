@@ -65,9 +65,9 @@ passport.deserializeUser((id, done) => {
 backend.init(DBPATH);
 
 // These are the only two templates we currently use
-let t1 = handlebars.compile(fs.readFileSync('views/index.mustache').toString());
-let t2 = handlebars.compile(fs.readFileSync('views/tasks.mustache').toString());
-let t_login = handlebars.compile(fs.readFileSync('views/login.mustache').toString());
+let t1 = handlebars.compile(fs.readFileSync('views/index.handlebars').toString());
+let t2 = handlebars.compile(fs.readFileSync('views/tasks.handlebars').toString());
+let t_login = handlebars.compile(fs.readFileSync('views/login.handlebars').toString());
 
 const app = express();
 
@@ -115,6 +115,10 @@ app.post('/login', (req, res, next) => {
             return res.redirect('/authtest');
         });
     })(req, res, next);
+});
+
+app.get('/register', (req, res) => {
+    
 });
 
 app.get('/authtest', (req, res) => {
