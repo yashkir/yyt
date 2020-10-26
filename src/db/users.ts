@@ -65,7 +65,6 @@ function parseRowToUserRecord(row: any): IUserRecord | null {
         return user;
     } catch (error) {
         if (error instanceof TypeError) {
-            console.log(error);
             return null;
         } else {
             throw error;

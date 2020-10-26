@@ -13,6 +13,7 @@ import session_file_store = require('session-file-store');
 import bodyParser = require('body-parser');
 import passport = require('passport');
 import { Strategy as LocalStrategy } from 'passport-local';
+import * as bcrypt from 'bcrypt-nodejs';
 
 import * as backend from './db/backend';
 import * as usersDb from './db/users';
@@ -33,13 +34,15 @@ const FileStore = session_file_store(session);
 passport.use(new LocalStrategy(
     (username, password, done) => {
         usersDb.getUserByUsername(DBPATH, username, (err, user) => {
-            if (err) console.log(err);
-            if (user && username == user.username && password == user.password) {
+            if (err) {
+                return done(err);
+            }
+            if (user && bcrypt.compareSync(password, user.password)) { //TODO
                 console.log(`Authenticated ${username}`);
                 return done(null, user);
             } else {
                 console.log(`Can't authenticate ${username}`);
-                return done(null, false, { message: "Invalid User.\n" });
+                return done(null, false, { message: "Invalid Credentials.\n" });
             }
         });
     })
