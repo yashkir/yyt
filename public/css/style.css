@@ -1,5 +1,28 @@
-h1 {
+* {
   font-family: sans-serif;
+}
+
+ul.navbar {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul.navbar li {
+  display: inline;
+  border: 2px;
+}
+
+ul.navbar li a {
+  border-style: solid;
+  margin: 5px;
+  padding: 5px;
+  color: black;
+  background-color: white;
+  text-decoration: none;
+}
+
+ul.navbar li a:hover {
+  background-color: lightblue;
 }
 
 ul.tasks {

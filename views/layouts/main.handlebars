@@ -5,12 +5,14 @@
     <title>YYT {{title}}</title>
   </head>
   <body>
-    <a href="/">Home</a>
-    <a href="/tasks/">Tasks</a>
-    <a href="/login/">Login</a>
-    <a href="/logout/">Logout</a>
-    <a href="/authtest/">Authentication Test</a>
-    {{#if session.username}}<b>User: {{session.username}}</b>{{/if}}
+    <ul class="navbar">
+      <li><a href="/">Home</a></li>
+      <li><a href="/tasks/">Tasks</a></li>
+      <li><a href="/login/">Login</a></li>
+      <li><a href="/logout/">Logout</a></li>
+      <li><a href="/authtest/">Authentication Test</a></li>
+      {{#if session.username}}<li><b>User: {{session.username}}</b></li>{{/if}}
+    </ul>
     <hr>
     {{{body}}}
   </body>
