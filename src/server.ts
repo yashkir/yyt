@@ -112,7 +112,13 @@ app.post('/login', (req, res, next) => {
         req.login(user, (err) => {
             if (err)  { return next(err); }
             req.session.username = user.username;
-            return res.redirect('/authtest');
+            req.session.save(err => {
+                if (err) {
+                    next(err);
+                } else {
+                    res.redirect('/');
+                }
+            });
         });
     })(req, res, next);
 });
