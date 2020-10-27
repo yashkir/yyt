@@ -3,16 +3,27 @@
 }
 
 ul.navbar {
+  background-color: grey;
   list-style-type: none;
+  margin: 0;
   padding: 0;
+  border: 2px;
+  border-style: solid;
+  overflow: hidden;
 }
 
 ul.navbar li {
-  display: inline;
-  border: 2px;
+  float: left;
+}
+
+ul.navbar li.userstatus {
+  margin: 5px;
+  padding: 5px;
 }
 
 ul.navbar li a {
+  display: block;
+  border: 2px;
   border-style: solid;
   margin: 5px;
   padding: 5px;

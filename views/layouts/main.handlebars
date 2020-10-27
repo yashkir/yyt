@@ -11,9 +11,8 @@
       <li><a href="/login/">Login</a></li>
       <li><a href="/logout/">Logout</a></li>
       <li><a href="/authtest/">Authentication Test</a></li>
-      {{#if session.username}}<li><b>User: {{session.username}}</b></li>{{/if}}
+      {{#if session.username}}<li class="userstatus"><b>User: {{session.username}}</b></li>{{/if}}
     </ul>
-    <hr>
     {{{body}}}
   </body>
 </html>
