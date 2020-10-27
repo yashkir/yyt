@@ -1,4 +1,4 @@
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * backend
  *
  * Provides functions for accessing and manipulating the 'tasks_${username}'
@@ -115,7 +115,7 @@ export function dump(user_id: string, callback: { (arg0: any[]): void }) {
 export function export_todotxt(user_id: string, callback: { (arg0: string): void }): void {
     let lines: string[] = [];
 
-    list(user_id, (tasks: ITask[]) => {
+    list(user_id, (err, tasks) => {
         tasks.forEach((task) => {
             let line: string;
             if (task.isDone) {

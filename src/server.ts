@@ -23,7 +23,6 @@ import * as usersDb from './db/users';
  * Constants, likely to be swapped out in the future
  * ----------------------------------------------------------------------- */
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
-const USERID = 'yashkir55';
 const SECRET = 'very secret';
 const port = 8080;
 

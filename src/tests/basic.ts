@@ -19,7 +19,7 @@ t.test('backend adds a task and retrieves it', t => {
             if (err) {
                 throw err;
             }
-            backend.list(USERID, (tasks) => {
+            backend.list(USERID, (err, tasks) => {
                 t.equal(tasks[0].text, "basic test string");
                 t.end();
             });
