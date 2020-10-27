@@ -17,10 +17,6 @@ export interface ITask {
     isDone: boolean
 }
 
-export interface IListCallback {
-    (tasks: ITask[]): void;
-}
-
 /* -------------------------------------------------------------------------- 
  * Function Exports
  * ----------------------------------------------------------------------- */
@@ -84,11 +80,11 @@ export function done(user_id: string, id: number, toggle?: boolean, callback?: (
     }
 }
 
-export function list(user_id: string, callback: IListCallback): void {
+export function list(user_id: string, callback: (err: Error, tasks: ITask[] | null) => void): void {
     let tasks: ITask[] = [];
     db.all(`SELECT id, text, done FROM tasks_${user_id}`, (error, rows) => {
         if (error) {
-            throw error;
+            return callback(error, null);
         }
         rows.forEach((row) => {
             tasks.push({
@@ -97,7 +93,7 @@ export function list(user_id: string, callback: IListCallback): void {
                 isDone: row.done
             });
         });
-        callback(tasks);
+        callback(error, tasks);
     });
 }
 

@@ -78,7 +78,8 @@ yargs
  * ----------------------------------------------------------------------- */
 
 function list(showAll?: boolean) {
-    backend.list(USER_ID, (tasks) => {
+    backend.list(USER_ID, (err, tasks) => {
+        if (err) return console.log(err);
         tasks.forEach((task) => {
             if (task.isDone) {
                 if (showAll) {
