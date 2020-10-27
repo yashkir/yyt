@@ -5,6 +5,13 @@
     <title>YYT {{title}}</title>
   </head>
   <body>
-      {{{body}}}
+    <a href="/">Home</a>
+    <a href="/tasks">Tasks</a>
+    <a href="/login">Login</a>
+    <a href="/logout">Logout</a>
+    <a href="/authtest">Authentication Test</a>
+    {{#if session.username}}<b>User: {{session.username}}</b>{{/if}}
+    <br>
+    {{{body}}}
   </body>
 </html>

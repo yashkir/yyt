@@ -97,11 +97,11 @@ app.use((req, res, next) => {
  * Routes
  * ----------------------------------------------------------------------- */
 app.get('/', (req, res) => {
-    res.render('index', {name: 'stranger'});
+    res.render('index', {session: req.session});
 });
 
 app.get('/login', (req, res) => {
-    res.render('login', {title: 'Login'});
+    res.render('login', {session: req.session, title: 'Login'});
 });
 
 app.post('/login', (req, res, next) => {
@@ -111,6 +111,7 @@ app.post('/login', (req, res, next) => {
         if (!user){ return res.redirect('/') };
         req.login(user, (err) => {
             if (err)  { return next(err); }
+            req.session.username = user.username;
             return res.redirect('/authtest');
         });
     })(req, res, next);
@@ -130,7 +131,7 @@ app.get('/authtest', (req, res) => {
 
 app.get('/tasks', (req, res) => {
     backend.list(USERID, (tasks) => {
-        res.render('tasks', {tasks: tasks});
+        res.render('tasks', {session: req.session, title: 'Tasks', tasks: tasks});
     });
 });
 
