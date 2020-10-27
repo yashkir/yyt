@@ -117,15 +117,24 @@ app.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
+app.get('/logout', (req, res, next) => {
+    req.logout(); //TODO session too
+    req.session.username = null;
+    req.session.save((err) => {
+        if (err) { console.log(err); }
+        res.redirect('/');
+    });
+});
+
 app.get('/register', (req, res) => {
-    
+    res.redirect('/');
 });
 
 app.get('/authtest', (req, res) => {
    if (req.isAuthenticated()) {
       res.send("Authenticated is true");
    } else {
-      res.redirect('/');
+      res.send("Authenticated is FALSE");
    }
 });
 
