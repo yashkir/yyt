@@ -109,7 +109,7 @@ app.post('/login', (req, res, next) => {
             return res.render('error', {error: info.message});
         }
         if (err)  { return next(err); }
-        if (!user){ return res.redirect('/login') }
+        if (!user){ return res.redirect('/login/') }
         req.login(user, (err) => {
             if (err)  { return next(err); }
             req.session.username = user.username;
@@ -117,7 +117,7 @@ app.post('/login', (req, res, next) => {
                 if (err) {
                     next(err);
                 } else {
-                    res.redirect('/tasks');
+                    res.redirect('/tasks/');
                 }
             });
         });
