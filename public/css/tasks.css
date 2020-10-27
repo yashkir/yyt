@@ -13,25 +13,25 @@ ul.tasks {
   text-decoration: none;
 }
 
-li.done {
+ul.tasks li.done {
   color: darkgrey;
 }
 
-a.checkmark {
+ul.tasks a.checkmark {
   font-size: 130%;
   color: black;
   text-decoration: none;
 }
 
-a.checkmark:hover {
+ul.tasks a.checkmark:hover {
   color: blue;
 }
 
-a.delete {
+ul.tasks a.delete {
   color: darkgrey;
 }
 
-a.delete:hover {
+ul.tasks a.delete:hover {
   color: red;
 }
 

@@ -1,4 +1,4 @@
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * server
  *
  * This server is a front for the two database interfaces. We handle all
@@ -19,7 +19,7 @@ import * as bcrypt from 'bcrypt-nodejs';
 import * as backend from './db/backend';
 import * as usersDb from './db/users';
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Constants, likely to be swapped out in the future
  * ----------------------------------------------------------------------- */
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
@@ -27,7 +27,7 @@ const USERID = 'yashkir55';
 const SECRET = 'very secret';
 const port = 8080;
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Initial setup and configuration
  * ----------------------------------------------------------------------- */
 const FileStore = session_file_store(session);
@@ -65,7 +65,7 @@ passport.deserializeUser((id, done) => {
 
 backend.init(DBPATH);
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Middlware
  * ----------------------------------------------------------------------- */
 const app = express();
@@ -93,7 +93,7 @@ app.use((req, res, next) => {
     next();
 });
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Routes
  * ----------------------------------------------------------------------- */
 app.get('/', (req, res) => {
@@ -127,6 +127,7 @@ app.get('/logout', (req, res, next) => {
 });
 
 app.get('/register', (req, res) => {
+    //TODO create a table
     res.redirect('/');
 });
 
@@ -139,7 +140,14 @@ app.get('/authtest', (req, res) => {
 });
 
 app.get('/tasks', (req, res) => {
-    backend.list(USERID, (tasks) => {
+    if (!req.isAuthenticated()) {
+        return res.render('error', {error: "Not Logged in!"});
+    }
+    backend.list(req.session.username, (err, tasks) => {
+        if (err) {
+            console.log(err);
+            return res.render('error', {error: err})
+        }
         res.render('tasks', {session: req.session, title: 'Tasks', tasks: tasks});
     });
 });
@@ -147,7 +155,7 @@ app.get('/tasks', (req, res) => {
 app.get('/tasks/add', (req, res) => {
     let text = req.query['task_text'] as string;
     if (text.length > 0) {
-        backend.add(USERID, text, false, (err) => {
+        backend.add(req.session.username, text, false, (err) => {
             res.redirect('..');
         });
     } else {
@@ -156,18 +164,18 @@ app.get('/tasks/add', (req, res) => {
 });
 
 app.get('/tasks/:taskId/done', (req, res) => {
-    backend.done(USERID, parseInt(req.params.taskId), true, (err) => {
+    backend.done(req.session.username, parseInt(req.params.taskId), true, (err) => {
         res.redirect('..');
     });
 });
 
 app.get('/tasks/:taskId/delete', (req, res) => {
-    backend.del(USERID, parseInt(req.params.taskId), (err) => {
+    backend.del(req.session.username, parseInt(req.params.taskId), (err) => {
         res.redirect('..');
     });
 });
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Start the Server !
  * ----------------------------------------------------------------------- */
 app.listen(port, () => {
