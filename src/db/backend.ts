@@ -8,7 +8,7 @@ import sqlite3 = require('sqlite3')
 
 var db: sqlite3.Database;
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Interface Exports
  * ----------------------------------------------------------------------- */
 export interface ITask {
@@ -17,7 +17,7 @@ export interface ITask {
     isDone: boolean
 }
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Function Exports
  * ----------------------------------------------------------------------- */
 export function set_serialize(yes: boolean) {
@@ -41,12 +41,12 @@ export function close(): void {
     db.close();
 }
 
-export function add(user_id: string, text: string, done: boolean = false, 
+export function add(user_id: string, text: string, done: boolean = false,
                     callback?: (err: Error | null) => void): void {
     db.run(`INSERT INTO tasks_${user_id} (text, done) VALUES (?, ?)`, [text, done], (err) => {
         if (callback) {
             callback(err);
-        } 
+        }
     });
 }
 
@@ -54,7 +54,7 @@ export function del(user_id: string, id: number, callback?: (err: Error | null) 
     db.run(`DELETE FROM tasks_${user_id} WHERE id=?`, [id], (err) => {
         if (callback) {
             callback(err);
-        } 
+        }
     });
 }
 
