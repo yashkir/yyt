@@ -2,13 +2,15 @@
   font-family: sans-serif;
 }
 
+body {
+  margin: 0px;
+}
+
 ul.navbar {
-  background-color: grey;
+  background-color: lightblue;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  border: 2px;
-  border-style: solid;
   overflow: hidden;
 }
 
@@ -17,23 +19,21 @@ ul.navbar li {
 }
 
 ul.navbar li.userstatus {
-  margin: 5px;
-  padding: 5px;
+  margin: 0px;
+  padding: 12px 12px;
 }
 
 ul.navbar li a {
   display: block;
-  border: 2px;
-  border-style: solid;
-  margin: 5px;
-  padding: 5px;
+  margin: 0px 0px;
+  padding: 12px 12px;
   color: black;
-  background-color: white;
   text-decoration: none;
 }
 
 ul.navbar li a:hover {
-  background-color: lightblue;
+  background-color: blue;
+  color: white;
 }
 
 ul.tasks {
@@ -69,3 +69,7 @@ ul.tasks a.delete:hover {
   color: red;
 }
 
+.content {
+  padding: 15px;
+  max-width: 965px;
+}

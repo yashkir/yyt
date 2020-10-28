@@ -13,6 +13,8 @@
       <li><a href="/authtest/">Authentication Test</a></li>
       {{#if session.username}}<li class="userstatus"><b>User: {{session.username}}</b></li>{{/if}}
     </ul>
+    <div class="content">
     {{{body}}}
+    </div>
   </body>
 </html>
