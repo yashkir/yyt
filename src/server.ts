@@ -14,7 +14,7 @@ import session_file_store = require('session-file-store');
 import bodyParser = require('body-parser');
 import passport = require('passport');
 import { Strategy as LocalStrategy } from 'passport-local';
-import * as bcrypt from 'bcrypt-nodejs';
+import * as bcrypt from 'bcrypt';
 
 import * as backend from './db/backend';
 import * as usersDb from './db/users';
@@ -31,6 +31,7 @@ const app = express();
 const FileStore = session_file_store(session);
 
 backend.init(DBPATH);
+usersDb.connectDb(DBPATH);
 
 passport.use(new LocalStrategy(
     (username, password, done) => {

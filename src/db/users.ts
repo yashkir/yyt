@@ -1,11 +1,11 @@
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * users
  *
- * Provide functions for accessing the 'users' table of our database. 
+ * Provide functions for accessing the 'users' table of our database.
  * ----------------------------------------------------------------------- */
 import sqlite3 = require('sqlite3')
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Exports
  * ----------------------------------------------------------------------- */
 export interface IUserRecord {
@@ -15,9 +15,17 @@ export interface IUserRecord {
     password: string,
 }
 
+var db: sqlite3.Database;
+
+export function connectDb(path:string, callback?: (err: Error) => void) {
+    db = new sqlite3.Database(path, callback);
+    console.log("connected to db");
+}
+
+
 export function getUserById(path: string, id: string,
                             callback?: (err: Error, user: IUserRecord | null) => void) {
-    let db = new sqlite3.Database(path);
+    //let db = new sqlite3.Database(path);
     db.get("SELECT id, username, email, password FROM users WHERE id=?", [id], (err, row) => {
         callback(err, parseRowToUserRecord(row));
     });
@@ -32,7 +40,7 @@ export function getUserByUsername(path: string, username: string,
 }
 
 export function addUser(path: string, user: IUserRecord, callback?: (err: Error) => void) {
-    let db = new sqlite3.Database(path);
+    //let db = new sqlite3.Database(path);
     db.run("INSERT INTO users (username, email, password) VALUES(?,?,?)",
             [user.username, user.email, user.password],
             (err) => { callback(err); }
@@ -52,7 +60,7 @@ export function dropUserTable(path: string, callback?: (err: Error) => void) {
     db.run("DROP TABLE IF EXISTS users", err => callback(err));
 }
 
-/* -------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------
  * Local functions
  * ----------------------------------------------------------------------- */
 function parseRowToUserRecord(row: any): IUserRecord | null {

@@ -1,9 +1,12 @@
 import express = require('express');
 import passport = require('passport');
 import backend = require('./db/backend');
-import users = require('./db/users')
+import users = require('./db/users');
+import bcrypt = require('bcrypt');
 
 export const router = express.Router();
+
+const saltRounds = 10;
 
 router.get('/', (req, res) => {
     res.render('index', {session: req.session});
@@ -43,15 +46,32 @@ router.get('/logout', (req, res, next) => {
     });
 });
 
-router.get('/register', (req, res) => {
-    //TODO create a table
-    //let newUser: users.IUserRecord = {
-        //id:       string,
-        //username: string,
-        //email:    string,
-        //password: string,
-    //}
+router.post('/register', (req, res, next) => {
+    //TODO check 2ndpassword
+    //TODO check duplicate users
+    //TODO create table
+    bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+        if (err) {
+            res.render('error', {error: err});
+        } else {
+            let user: users.IUserRecord  = {
+                id:       null,
+                username: req.body.username,
+                email:    req.body.email,
+                password: hash,
+            }
+            users.addUser('', user, (err) => {
+                if (err) {
+                    next(err);
+                } else {
+                    res.send("success");
+                }
+            });
+        }
+    });
+});
 
+router.get('/register', (req, res) => {
     return res.render('register', {session: req.session, title: 'Register'});
 });
 
