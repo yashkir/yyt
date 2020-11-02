@@ -1,6 +1,7 @@
 import express = require('express');
 import passport = require('passport');
 import backend = require('./db/backend');
+import users = require('./db/users')
 
 export const router = express.Router();
 
@@ -44,7 +45,14 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/register', (req, res) => {
     //TODO create a table
-    res.redirect('/');
+    //let newUser: users.IUserRecord = {
+        //id:       string,
+        //username: string,
+        //email:    string,
+        //password: string,
+    //}
+
+    return res.render('register', {session: req.session, title: 'Register'});
 });
 
 router.get('/authtest', (req, res) => {

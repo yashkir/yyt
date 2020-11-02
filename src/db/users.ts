@@ -9,7 +9,7 @@ import sqlite3 = require('sqlite3')
  * Exports
  * ----------------------------------------------------------------------- */
 export interface IUserRecord {
-    id:       string,
+    id:       number,
     username: string,
     email:    string,
     password: string,
@@ -33,8 +33,8 @@ export function getUserByUsername(path: string, username: string,
 
 export function addUser(path: string, user: IUserRecord, callback?: (err: Error) => void) {
     let db = new sqlite3.Database(path);
-    db.run("INSERT INTO users (id, username, email, password) VALUES(?,?,?,?)",
-            [user.id, user.username, user.email, user.password],
+    db.run("INSERT INTO users (username, email, password) VALUES(?,?,?)",
+            [user.username, user.email, user.password],
             (err) => { callback(err); }
     );
 }
@@ -42,7 +42,8 @@ export function addUser(path: string, user: IUserRecord, callback?: (err: Error)
 export function createUserTable(path: string, callback?: (err: Error) => void) {
     let db = new sqlite3.Database(path);
     db.run(`CREATE TABLE IF NOT EXISTS
-            users (id TEXT, username TEXT, email TEXT, password TEXT) `,
+            users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                   username TEXT, email TEXT, password TEXT) `,
             err => callback(err));
 }
 
