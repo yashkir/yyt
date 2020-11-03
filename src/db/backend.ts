@@ -149,7 +149,7 @@ export function import_todotxt(user_id: string, blob: string): void {
 }
 
 
-export function create_table_for_user(user_id: string, callback: Function) {
+export function create_table_for_user(user_id: string, callback?: (err: Error | null) => void) {
     // TODO Sanitize table name
     db.run(`CREATE TABLE IF NOT EXISTS
             tasks_${user_id} (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

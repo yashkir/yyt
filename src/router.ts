@@ -67,7 +67,12 @@ router.post('/register', (req, res, next) => {
                 if (err) {
                     next(err);
                 } else {
-                    res.send("success");
+                    backend.create_table_for_user(user.username, (err) => {
+                        if (err) {
+                            res.render('error', {error: err});
+                        } else {
+                            res.send("success");
+                        }
                 }
             });
         }
