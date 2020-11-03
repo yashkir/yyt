@@ -50,6 +50,9 @@ router.post('/register', (req, res, next) => {
     //TODO check 2ndpassword
     //TODO check duplicate users
     //TODO create table
+    if (req.body.password != req.body.password2) {
+        return res.send("Passwords do not match.");
+    }
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
         if (err) {
             res.render('error', {error: err});

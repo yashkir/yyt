@@ -38,10 +38,16 @@ export function getUserByUsername(username: string,
 }
 
 export function addUser(user: IUserRecord, callback?: (err: Error) => void) {
-    db.run("INSERT INTO users (username, email, password) VALUES(?,?,?)",
-            [user.username, user.email, user.password],
-            (err) => { callback(err); }
-    );
+    db.get("SELECT username FROM users WHERE username=?", [user.username], (err, row) => {
+        if (!row) {
+            db.run("INSERT INTO users (username, email, password) VALUES(?,?,?)",
+                    [user.username, user.email, user.password],
+                    (err) => { callback(err); }
+            );
+        } else {
+            callback(new Error("Duplicate username."));
+        }
+    });
 }
 
 export function createUserTable(callback?: (err: Error) => void) {
