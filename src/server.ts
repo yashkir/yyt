@@ -35,7 +35,7 @@ usersDb.connectDb(DBPATH);
 
 passport.use(new LocalStrategy(
     (username, password, done) => {
-        usersDb.getUserByUsername(DBPATH, username, (err, user) => {
+        usersDb.getUserByUsername(username, (err, user) => {
             if (err) {
                 return done(err);
             }
@@ -55,7 +55,7 @@ passport.serializeUser((user: usersDb.IUserRecord, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    usersDb.getUserById(DBPATH, id as string, (err, user) => {
+    usersDb.getUserById(id as string, (err, user) => {
         if (!err) {
             done(null, user);
         } else {

@@ -17,46 +17,41 @@ export interface IUserRecord {
 
 var db: sqlite3.Database;
 
-export function connectDb(path:string, callback?: (err: Error) => void) {
+export function connectDb(path: string, callback?: (err: Error) => void) {
     db = new sqlite3.Database(path, callback);
     console.log("connected to db");
 }
 
 
-export function getUserById(path: string, id: string,
+export function getUserById(id: string,
                             callback?: (err: Error, user: IUserRecord | null) => void) {
-    //let db = new sqlite3.Database(path);
     db.get("SELECT id, username, email, password FROM users WHERE id=?", [id], (err, row) => {
         callback(err, parseRowToUserRecord(row));
     });
 }
 
-export function getUserByUsername(path: string, username: string,
+export function getUserByUsername(username: string,
                                   callback?: (err: Error, user: IUserRecord | null) => void) {
-    let db = new sqlite3.Database(path);
     db.get("SELECT id, username, email, password FROM users WHERE username=?", [username], (err, row) => {
         callback(err, parseRowToUserRecord(row));
     });
 }
 
-export function addUser(path: string, user: IUserRecord, callback?: (err: Error) => void) {
-    //let db = new sqlite3.Database(path);
+export function addUser(user: IUserRecord, callback?: (err: Error) => void) {
     db.run("INSERT INTO users (username, email, password) VALUES(?,?,?)",
             [user.username, user.email, user.password],
             (err) => { callback(err); }
     );
 }
 
-export function createUserTable(path: string, callback?: (err: Error) => void) {
-    let db = new sqlite3.Database(path);
+export function createUserTable(callback?: (err: Error) => void) {
     db.run(`CREATE TABLE IF NOT EXISTS
             users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                    username TEXT, email TEXT, password TEXT) `,
             err => callback(err));
 }
 
-export function dropUserTable(path: string, callback?: (err: Error) => void) {
-    let db = new sqlite3.Database(path);
+export function dropUserTable(callback?: (err: Error) => void) {
     db.run("DROP TABLE IF EXISTS users", err => callback(err));
 }
 

@@ -60,7 +60,7 @@ router.post('/register', (req, res, next) => {
                 email:    req.body.email,
                 password: hash,
             }
-            users.addUser('', user, (err) => {
+            users.addUser(user, (err) => {
                 if (err) {
                     next(err);
                 } else {
