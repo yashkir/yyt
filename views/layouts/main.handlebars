@@ -8,11 +8,13 @@
     <ul class="navbar">
       <li><a href="/">Home</a></li>
       <li><a href="/tasks/">Tasks</a></li>
-      <li><a href="/register/">Register</a></li>
-      <li><a href="/login/">Login</a></li>
-      <li><a href="/logout/">Logout</a></li>
-      <li><a href="/authtest/">Authentication Test</a></li>
-      {{#if session.username}}<li class="userstatus"><b>User: {{session.username}}</b></li>{{/if}}
+      {{#if session.username}}
+        <li class="userstatus"><b>User: {{session.username}}</b></li>
+        <li><a href="/logout/">Logout</a></li>
+      {{else}}
+        <li><a href="/register/">Register</a></li>
+        <li><a href="/login/">Login</a></li>
+      {{/if}}
     </ul>
     <div class="content">
     {{{body}}}

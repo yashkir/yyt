@@ -93,6 +93,7 @@ router.get('/register', (req, res) => {
     return res.render('register', {session: req.session, title: 'Register'});
 });
 
+//TODO remove, deprecated
 router.get('/authtest', (req, res) => {
     if (req.isAuthenticated()) {
         return res.render('error', {error: "Authenticated is TRUE"});
