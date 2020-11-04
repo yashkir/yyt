@@ -46,6 +46,15 @@ router.get('/logout', (req, res, next) => {
     });
 });
 
+router.get('/manage', (req, res, next) => {
+    // TODO use passport.deserializeUser here?
+    users.getUserById(req.session.passport.user, (err, user) => {
+        if(err) { next(err); }
+
+        res.render('manage', {session: req.session, user: user});
+    })
+});
+
 router.post('/register', (req, res, next) => {
     //TODO check 2ndpassword
     //TODO check duplicate users

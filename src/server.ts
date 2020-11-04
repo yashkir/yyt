@@ -31,7 +31,7 @@ const app = express();
 const FileStore = session_file_store(session);
 
 backend.init(DBPATH);
-usersDb.connectDb(DBPATH);
+usersDb.connectDb(DBPATH, (err) => {if(err) throw err;});
 
 passport.use(new LocalStrategy(
     (username, password, done) => {
