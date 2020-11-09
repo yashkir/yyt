@@ -35,26 +35,7 @@ router.get('/login/guest', (req, res, next) => {
     //TODO route to login
 });
 
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (info) {
-            return res.render('error', {error: info.message});
-        }
-        if (err)  { return next(err); }
-        if (!user){ return res.redirect('/login/') }
-        req.login(user, (err) => {
-            if (err)  { return next(err); }
-            req.session.username = user.username;
-            req.session.save(err => {
-                if (err) {
-                    next(err);
-                } else {
-                    res.redirect('/tasks/');
-                }
-            });
-        });
-    })(req, res, next);
-});
+router.post('/login', authenticateAndLogin);
 
 router.get('/logout', (req, res, next) => {
     req.logout(); //TODO session too
@@ -179,4 +160,25 @@ function make_user(user: users.IUserRecord, callback: (err: Error) => void) {
             });
         }
     });
+}
+
+function authenticateAndLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
+    passport.authenticate('local', (err, user, info) => {
+        if (info) {
+            return res.render('error', {error: info.message});
+        }
+        if (err)  { return next(err); }
+        if (!user){ return res.redirect('/login/') }
+        req.login(user, (err) => {
+            if (err)  { return next(err); }
+            req.session.username = user.username;
+            req.session.save(err => {
+                if (err) {
+                    next(err);
+                } else {
+                    res.redirect('/tasks/');
+                }
+            });
+        });
+    })(req, res, next);
 }
