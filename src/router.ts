@@ -59,36 +59,18 @@ router.get('/manage', (req, res, next) => {
 });
 
 router.post('/register', (req, res, next) => {
-    //TODO check 2ndpassword
-    //TODO check duplicate users
-    //TODO create table
     if (req.body.password != req.body.password2) {
         return res.send("Passwords do not match.");
     }
-    bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-        if (err) {
-            res.render('error', {error: err});
-        } else {
-            let user: users.IUserRecord  = {
-                id:       null,
-                username: req.body.username,
-                email:    req.body.email,
-                password: hash,
-            }
-            users.addUser(user, (err) => {
-                if (err) {
-                    next(err);
-                } else {
-                    backend.create_table_for_user(user.username, (err) => {
-                        if (err) {
-                            res.render('error', {error: err});
-                        } else {
-                            res.send("success");
-                        }
-                    });
-                }
-            });
-        }
+    let user: users.IUserRecord  = {
+        id:       null,
+        username: req.body.username,
+        email:    req.body.email,
+        password: req.body.password,
+    };
+    make_user(user, (err) => {
+        if (err) { return next(err) };
+        res.send("Created User.");
     });
 });
 
