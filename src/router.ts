@@ -16,6 +16,25 @@ router.get('/login', (req, res) => {
     res.render('login', {session: req.session, title: 'Login'});
 });
 
+router.get('/login/guest', (req, res, next) => {
+    let user: users.IUserRecord = {
+        id: null,
+        username: `Guest-${req.session.id}`.replace(/-/g,'_'),
+        email: null,
+        password: 'password',
+    }
+    make_user(user, (err) => {
+        if (err) {
+            return next(err)
+        }
+        else {
+            //TODO make a better message
+            res.send(`Created ${user.username}\npassword: password`);
+        }
+    });
+    //TODO route to login
+});
+
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (info) {
