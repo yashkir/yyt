@@ -137,3 +137,27 @@ router.get('/tasks/:taskId/delete', (req, res) => {
         res.redirect('..');
     });
 });
+
+//TODO move this out?
+function make_user(user: users.IUserRecord, callback: (err: Error) => void) {
+    bcrypt.hash(user.password, saltRounds, (err, hash) => {
+        if (err) {
+            callback(err);
+        } else {
+            user.password = hash;
+            users.addUser(user, (err) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    backend.create_table_for_user(user.username, (err) => {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null);
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
