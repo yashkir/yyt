@@ -29,7 +29,10 @@ router.get('/login/guest', (req, res, next) => {
         }
         else {
             //TODO make a better message
-            res.send(`Created ${user.username}\npassword: password`);
+            console.log(`Created ${user.username}\npassword: password`);
+            req.body.username = user.username;
+            req.body.password = 'password';
+            authenticateAndLogin(req, res, next);
         }
     });
     //TODO route to login
