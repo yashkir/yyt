@@ -60,7 +60,7 @@ router.get('/manage', (req, res, next) => {
 
 router.post('/register', (req, res, next) => {
     if (req.body.password != req.body.password2) {
-        return res.send("Passwords do not match.");
+        next(new Error("Passwords do not match."));
     }
     let user: users.IUserRecord  = {
         id:       null,
@@ -70,7 +70,7 @@ router.post('/register', (req, res, next) => {
     };
     make_user(user, (err) => {
         if (err) { return next(err) };
-        res.send("Created User.");
+        res.render('message', { body: "Created User." });
     });
 });
 

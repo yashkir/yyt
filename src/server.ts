@@ -93,6 +93,12 @@ app.use((req, res, next) => {
 });
 
 app.use('/', router);
+app.use(function errorMiddleware (err: Error,
+                                  req: express.Request,
+                                  res: express.Response,
+                                  next: express.NextFunction) {
+    res.render('error', { error: err });
+})
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
