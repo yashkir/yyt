@@ -5,9 +5,7 @@
  * sessions, authentication, templating, and interaction.
  * ----------------------------------------------------------------------- */
 import express = require('express');
-import handlebars = require('handlebars');
 import exphbs = require('express-handlebars');
-import fs = require('fs');
 import uuid = require('uuid');
 import session = require('express-session');
 import session_file_store = require('session-file-store');
@@ -98,7 +96,7 @@ app.use(function errorMiddleware (err: Error,
                                   res: express.Response,
                                   next: express.NextFunction) {
     res.render('error', { error: err });
-})
+});
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
