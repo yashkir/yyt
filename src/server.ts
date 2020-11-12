@@ -8,7 +8,8 @@ import express = require('express');
 import exphbs = require('express-handlebars');
 import uuid = require('uuid');
 import session = require('express-session');
-import session_file_store = require('session-file-store');
+import * as sqlite3 from 'sqlite3';
+import sqliteStoreFactory from 'express-session-sqlite';
 import bodyParser = require('body-parser');
 import passport = require('passport');
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -23,10 +24,11 @@ import { router } from './router';
  * ----------------------------------------------------------------------- */
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
 const SECRET = 'very secret';
+const sessionTTL = 1000 * 60 * 60 * 1;
 const port = 8080;
 
 const app = express();
-const FileStore = session_file_store(session);
+const SqliteStore = sqliteStoreFactory(session);
 
 backend.init(DBPATH);
 usersDb.connectDb(DBPATH, (err) => {if(err) throw err;});
@@ -77,7 +79,11 @@ app.use(session({
     genid: (req) => {
         return uuid.v4();
     },
-    store: new FileStore(),
+    store: new SqliteStore({
+        driver: sqlite3.Database,
+        path: DBPATH,
+        ttl: sessionTTL,
+    }),
     secret: SECRET,
     resave: false,
     saveUninitialized: true

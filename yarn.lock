@@ -1278,7 +1278,7 @@ debug@^3.2.6:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
+debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.2.0.tgz#7f150f93920e94c58f5574c2fd01a3110effe7f1"
   integrity sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==
@@ -1598,6 +1598,15 @@ express-handlebars@^5.2.0:
     glob "^7.1.6"
     graceful-fs "^4.2.4"
     handlebars "^4.7.6"
+
+express-session-sqlite@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/express-session-sqlite/-/express-session-sqlite-2.0.7.tgz#35609f146c0683478bad0cc1d133b83af542881c"
+  integrity sha512-Ym4CL6Ks+Pm24H2x0qITThncss/0uQdGmL2IxeKQjv8DmGkZq5oyg40hmy9XKnvh5+R9gi5WG9skAw1EeD5c6g==
+  dependencies:
+    debug "^4.2.0"
+    sql-template-strings "^2.2.2"
+    sqlite "^4.0.14"
 
 express-session@^1.17.1:
   version "1.17.1"
@@ -3716,6 +3725,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
+sql-template-strings@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/sql-template-strings/-/sql-template-strings-2.2.2.tgz#3f11508a25addfce217a3042a9d300c3193b96ff"
+  integrity sha1-PxFQiiWt384hejBCqdMAwxk7lv8=
+
 sqlite3@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-5.0.0.tgz#1bfef2151c6bc48a3ab1a6c126088bb8dd233566"
@@ -3725,6 +3739,11 @@ sqlite3@^5.0.0:
     node-pre-gyp "^0.11.0"
   optionalDependencies:
     node-gyp "3.x"
+
+sqlite@^4.0.14:
+  version "4.0.15"
+  resolved "https://registry.yarnpkg.com/sqlite/-/sqlite-4.0.15.tgz#071e0577afb327fbd74a75354ea15964378392e3"
+  integrity sha512-irPPTrbVoDvwzRGpe0v8vxpNwMl+q0tXQzffQTcCUnaJzQFO0hfLLvFwGDKxd6vYBuvEr3uvPkObVoGOvVsmzA==
 
 sshpk@^1.7.0:
   version "1.16.1"
