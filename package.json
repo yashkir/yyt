@@ -17,7 +17,7 @@
     "server": "node built/server.js",
     "server:watch": "npx nodemon -e js,mustache built/server.js",
     "lint": "npx eslint src/*",
-    "clean": "rm -rf built/ tmp/ sessions/"
+    "clean": "rm -rf built/ tmp/"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
