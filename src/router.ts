@@ -22,6 +22,7 @@ router.get('/login/guest', (req, res, next) => {
         username: `Guest-${req.session.id}`.replace(/-/g,'_'),
         email: null,
         password: 'password',
+        isGuest: true,
     }
     make_user(user, (err) => {
         if (err) {

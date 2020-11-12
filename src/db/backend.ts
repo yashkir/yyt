@@ -6,7 +6,7 @@
  * ----------------------------------------------------------------------- */
 import sqlite3 = require('sqlite3')
 
-var db: sqlite3.Database;
+export var db: sqlite3.Database;
 
 /* --------------------------------------------------------------------------
  * Interface Exports

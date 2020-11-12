@@ -3,7 +3,7 @@
  *
  * Provide functions for accessing the 'users' table of our database.
  * ----------------------------------------------------------------------- */
-import sqlite3 = require('sqlite3')
+import { db } from './backend';
 
 /* --------------------------------------------------------------------------
  * Exports
@@ -13,15 +13,8 @@ export interface IUserRecord {
     username: string,
     email:    string,
     password: string,
+    isGuest?: boolean,
 }
-
-var db: sqlite3.Database;
-
-export function connectDb(path: string, callback: (err: Error) => void) {
-    db = new sqlite3.Database(path, callback);
-    console.log("connected to db");
-}
-
 
 export function getUserById(id: string,
                             callback: (err: Error, user: IUserRecord | null) => void) {
@@ -38,10 +31,12 @@ export function getUserByUsername(username: string,
 }
 
 export function addUser(user: IUserRecord, callback: (err: Error) => void) {
+    let isGuest = user.isGuest ? 1 : 0;
     db.get("SELECT username FROM users WHERE username=?", [user.username], (err, row) => {
+        if (err) { callback(err) };
         if (!row) {
-            db.run("INSERT INTO users (username, email, password) VALUES(?,?,?)",
-                    [user.username, user.email, user.password],
+            db.run("INSERT INTO users (username, email, password, isGuest) VALUES(?,?,?,?)",
+                    [user.username, user.email, user.password, isGuest],
                     (err) => { callback(err); }
             );
         } else {
