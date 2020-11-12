@@ -17,6 +17,7 @@ import * as bcrypt from 'bcrypt';
 
 import * as backend from './db/backend';
 import * as usersDb from './db/users';
+import { cleanupSessionlessGuests } from './db/helpers';
 import { router } from './router';
 
 /* --------------------------------------------------------------------------
@@ -24,7 +25,8 @@ import { router } from './router';
  * ----------------------------------------------------------------------- */
 const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
 const SECRET = 'very secret';
-const sessionTTL = 1000 * 60 * 60 * 1;
+const cookieMaxAge = 1 *24*60*60; // 1 day in seconds
+const sessionTTL = 1 *60*60*1000; // 1 hour in ms
 const port = 8080;
 
 const app = express();
@@ -75,7 +77,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
-    cookie: { maxAge: 365*24*60*60 },
+    cookie: { maxAge: cookieMaxAge },
     genid: (req) => {
         return uuid.v4();
     },
@@ -107,3 +109,10 @@ app.use(function errorMiddleware (err: Error,
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
+
+setInterval(() => {
+    console.log('Hourly guest cleanup.');
+    cleanupSessionlessGuests();
+}, 60000); //minutely for now
+//}, 1000*60*60); //hourly
