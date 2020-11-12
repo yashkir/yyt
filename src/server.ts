@@ -76,6 +76,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
+    cookie: { maxAge: 365*24*60*60 },
     genid: (req) => {
         return uuid.v4();
     },
