@@ -23,7 +23,7 @@ import { router } from './router';
 /* --------------------------------------------------------------------------
  * Setup
  * ----------------------------------------------------------------------- */
-const DBPATH = '/home/yashkir/tmp/test.db'; //TODO move this out
+const DBPATH = './tmp/test.db'; //TODO move this out
 const SECRET = 'very secret';
 const cookieMaxAge = 1 *24*60*60; // 1 day in seconds
 const sessionTTL = 1 *60*60*1000; // 1 hour in ms
@@ -32,7 +32,12 @@ const port = 8080;
 const app = express();
 const SqliteStore = sqliteStoreFactory(session);
 
-backend.init(DBPATH);
+backend.init(DBPATH, true, (err) => {
+    if (err) {
+        console.log(err)
+        process.exit(1);
+    }
+});
 
 passport.use(new LocalStrategy(
     (username, password, done) => {

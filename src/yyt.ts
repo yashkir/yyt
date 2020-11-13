@@ -14,7 +14,7 @@ const DBPATH = '/home/yashkir/tmp/test.db'
 const USER_ID = 'yashkir55'
 const CHALK_DONE = chalk.grey
 
-backend.init(DBPATH);
+backend.init(DBPATH, true, err => console.log(err));
 
 /* -------------------------------------------------------------------------- 
  * Set up yargs, it manages the whole front-end.

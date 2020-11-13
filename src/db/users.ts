@@ -45,14 +45,14 @@ export function addUser(user: IUserRecord, callback: (err: Error) => void) {
     });
 }
 
-export function createUserTable(callback: (err: Error) => void) {
+export function createUsersTable(callback: (err: Error) => void) {
     db.run(`CREATE TABLE IF NOT EXISTS
             users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                   username TEXT, email TEXT, password TEXT) `,
+                   username TEXT, email TEXT, password TEXT, isGuest INTEGER) `,
             err => callback(err));
 }
 
-export function dropUserTable(callback: (err: Error) => void) {
+export function dropUsersTable(callback: (err: Error) => void) {
     db.run("DROP TABLE IF EXISTS users", err => callback(err));
 }
 

@@ -4,7 +4,8 @@
  * Provides functions for accessing and manipulating the 'tasks_${username}'
  * tables. Must be initialized to connect to the DB before use.
  * ----------------------------------------------------------------------- */
-import sqlite3 = require('sqlite3')
+import * as sqlite3 from 'sqlite3';
+import { createUsersTable } from './users';
 
 export var db: sqlite3.Database;
 
@@ -28,13 +29,19 @@ export function set_serialize(yes: boolean) {
     }
 }
 
-export function init(path: string, verbose?: boolean, callback?: (err: Error | null) => void): void {
-    db = new sqlite3.Database(path);
-    if (verbose) {
-        sqlite3.verbose();
-    }
-
-    //create_table(callback);
+export function init(path: string, verbose: boolean, callback: (err: Error | null) => void): void {
+    db = new sqlite3.Database(path, (err) => {
+        if (err) {
+            return callback(err);
+        } else {
+            if (verbose) {
+                sqlite3.verbose();
+            }
+            createUsersTable( (err) => {
+                callback(err);
+            });
+        }
+    });
 }
 
 export function close(): void {
