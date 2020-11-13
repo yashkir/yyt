@@ -17,26 +17,31 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/login/guest', (req, res, next) => {
-    let user: users.IUserRecord = {
+    const newUser: users.IUserRecord = {
         id: null,
         username: `Guest-${req.session.id}`.replace(/-/g,'_'),
         email: null,
         password: 'password',
         isGuest: true,
-    }
-    make_user(user, (err) => {
-        if (err) {
-            return next(err)
-        }
-        else {
-            //TODO make a better message
-            console.log(`Created ${user.username}\npassword: password`);
-            req.body.username = user.username;
-            req.body.password = 'password';
+    };
+    req.body.username = newUser.username;
+    req.body.password = 'password';
+
+    users.getUserByUsername(newUser.username, (err, user) => {
+        if (user) {
             authenticateAndLogin(req, res, next);
+        } else {
+            make_user(newUser, (err) => {
+                if (err) {
+                    return next(err)
+                }
+                else {
+                    console.log(`Created ${newUser.username} with password: password`);
+                    authenticateAndLogin(req, res, next);
+                }
+            });
         }
     });
-    //TODO route to login
 });
 
 router.post('/login', authenticateAndLogin);
