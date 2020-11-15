@@ -13,13 +13,15 @@ export function cleanupSessionlessGuests(): void {
                 if (err) { return console.log(err); };
                 if (!row) {
                     console.log(`${id} guest session not found, deleting and dropping table`)
-                    db.run("DELETE FROM users WHERE username=?", username);
-                    db.run(`DROP TABLE tasks_${username}`);
+                    db.serialize(() => {
+                        db.run("DELETE FROM users WHERE username=?", username);
+                        db.run(`DROP TABLE IF EXISTS tasks_${username}`);
+                    });
                 }
                 else {
                     console.log(`guest ${id} valid`)
                 }
             });
-        }); 
+        });
     });
 }
