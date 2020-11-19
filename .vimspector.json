@@ -1,6 +1,6 @@
 {
   "configurations": {
-    "run": {
+    "server": {
       "adapter": "vscode-node",
       "configuration": {
         "request": "launch",
@@ -8,6 +8,18 @@
         "stopOnEntry": true,
         "console": "integratedTerminal",
         "program": "${workspaceRoot}/built/server.js",
+        "cwd": "${workspaceRoot}"
+      }
+    },
+    "yyt lsf a": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "request": "launch",
+        "protocol": "auto",
+        "stopOnEntry": true,
+        "console": "integratedTerminal",
+        "program": "${workspaceRoot}/built/yyt.js",
+        "args": ["lsf", "a"],
         "cwd": "${workspaceRoot}"
       }
     }

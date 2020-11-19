@@ -9,12 +9,12 @@ import backend = require('./db/backend')
 import fs = require('fs')
 import chalk = require('chalk');
 
-const VALID_COMMANDS = ['ls', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import', 'create'];
-const DBPATH = '/home/yashkir/tmp/test.db'
+const VALID_COMMANDS = ['ls', 'lsf', 'add', 'do', 'del', 'resetdb', 'dumpdb', 'export', 'import', 'create'];
+const DBPATH = '/home/yashkir/projects/yyt/tmp/test.db'
 const USER_ID = 'yashkir55'
 const CHALK_DONE = chalk.grey
 
-backend.init(DBPATH, true, err => console.log(err));
+backend.init(DBPATH, true, err => { if (err) { console.log(err) } });
 
 /* -------------------------------------------------------------------------- 
  * Set up yargs, it manages the whole front-end.
@@ -33,6 +33,10 @@ yargs
         } else {
             list()
         }
+    })
+    .command('lsf <filter>', 'list all tasks that match filter', {}, (argv) => {
+        const showAll: boolean = argv.a ? true : false;
+        list(showAll, argv.filter as string);
     })
     .command('add <task>', "Add a task to the task list.", {}, (argv) => {
         argv._.splice(0, 1, argv.task as string);
@@ -77,7 +81,17 @@ yargs
  * Commands to be run by yargs
  * ----------------------------------------------------------------------- */
 
-function list(showAll?: boolean) {
+function list(showAll?: boolean, filter?: string) {
+    if (filter) {
+        console.log(`Tasks matching: '${filter}'`);
+    } else {
+        console.log(`Tasks:`);
+    }
+    if (showAll) {
+        console.log(`(including done tasks)`)
+    }
+    console.log(`----------------------------------------`);
+
     backend.list(USER_ID, (err, tasks) => {
         if (err) return console.log(err);
         tasks.forEach((task) => {
@@ -89,7 +103,7 @@ function list(showAll?: boolean) {
                 console.log(`${task.id} : ${task.text}`);
             }
         });
-    });
+    }, filter);
 }
 
 function add(task_text: string) {

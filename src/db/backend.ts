@@ -87,13 +87,17 @@ export function done(user_id: string, id: number, toggle?: boolean, callback?: (
     }
 }
 
-export function list(user_id: string, callback: (err: Error, tasks: ITask[] | null) => void): void {
+export function list(user_id: string, callback: (err: Error, tasks: ITask[] | null) => void,
+                     filter?: string): void {
     let tasks: ITask[] = [];
     db.all(`SELECT id, text, done FROM tasks_${user_id}`, (error, rows) => {
         if (error) {
             return callback(error, null);
         }
         rows.forEach((row) => {
+            if (filter && row.text.indexOf(filter) == -1) {
+                return;
+            }
             tasks.push({
                 id: row.id,
                 text: row.text,
