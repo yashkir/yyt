@@ -1,9 +1,22 @@
 <h1>{{session.username}}'s Task List</h1>
-<form action="add/">
-  <input type="submit" value="Add Task">
-  <input type="text" id="task_text" name="task_text" autofocus>
-</form>
+
+<table>
+  <tr>
+    <form action="add/">
+      <td><input type="submit" value="Add Task"></td>
+      <td><input type="text" id="task_text" name="task_text" autofocus></td>
+    </form>
+  </tr>
+  <tr>
+    <form action="filter/">
+      <td> <input type="submit" value="Filter"> </td>
+      <td> <input type="text" id="filter_text" name="filter_text"> </td>
+      <td> <label for="filter_text"><em>{{session.filter}}<em></td>
+    </form>
+  </tr>
+</table>
 <br>
+
 {{#each tasks}}
   <ul class="tasks">
     <li {{#if this.isDone}}class="done"{{/if}}>

@@ -97,13 +97,14 @@ router.get('/tasks', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.render('error', {error: "Not Logged in!"});
     }
+
     backend.list(req.session.username, (err, tasks) => {
         if (err) {
             console.log(err);
             return res.render('error', {error: err})
         }
         res.render('tasks', {session: req.session, title: 'Tasks', tasks: tasks});
-    });
+    }, req.session.filter || '');
 });
 
 router.get('/tasks/add', (req, res) => {
@@ -115,6 +116,19 @@ router.get('/tasks/add', (req, res) => {
     } else {
         res.redirect('..');
     }
+});
+
+router.get('/tasks/filter', (req, res) => {
+    let filter = req.query['filter_text'] as string;
+    
+    req.session.filter = filter;
+    req.session.save( (err) => {
+        if (err) {
+            res.render('error', { error: err });
+        } else {
+            res.redirect('..');
+        }
+    });
 });
 
 router.get('/tasks/:taskId/done', (req, res) => {
@@ -163,6 +177,7 @@ function authenticateAndLogin(req: express.Request, res: express.Response, next:
         req.login(user, (err) => {
             if (err)  { return next(err); }
             req.session.username = user.username;
+            req.session.filter = '';
             req.session.save(err => {
                 if (err) {
                     next(err);
