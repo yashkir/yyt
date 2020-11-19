@@ -25,8 +25,8 @@ import { router } from './router';
  * ----------------------------------------------------------------------- */
 const DBPATH = './tmp/test.db'; //TODO move this out
 const SECRET = 'very secret';
-const cookieMaxAge = 1 *24*60*60; // 1 day in seconds
-const sessionTTL = 1 *60*60*1000; // 1 hour in ms
+const cookieMaxAge = 1 *24*60*60*1000; // 1 day in ms
+const sessionTTL = 1 *24*60*60*1000; // 1 day in ms
 const port = 8080;
 
 const app = express();
