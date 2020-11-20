@@ -1,6 +1,10 @@
+import * as bcrypt from 'bcrypt';
+import * as backend from './backend';
+import * as users from './users';
 import { db } from './backend';
 
 const guestPrefix = "Guest_";
+const saltRounds = 10;
 
 export function cleanupSessionlessGuests(): void {
     db.all("SELECT id, username FROM users WHERE isGuest=1", (err: Error, rows: any[]) => {
@@ -23,5 +27,28 @@ export function cleanupSessionlessGuests(): void {
                 }
             });
         });
+    });
+}
+
+export function makeUserAndTable(user: users.IUserRecord, callback: (err: Error) => void) {
+    bcrypt.hash(user.password, saltRounds, (err, hash) => {
+        if (err) {
+            callback(err);
+        } else {
+            user.password = hash;
+            users.addUser(user, (err) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    backend.create_table_for_user(user.username, (err) => {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null);
+                        }
+                    });
+                }
+            });
+        }
     });
 }

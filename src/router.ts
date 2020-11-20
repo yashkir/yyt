@@ -1,12 +1,11 @@
-import express = require('express');
-import passport = require('passport');
-import backend = require('./db/backend');
-import users = require('./db/users');
-import bcrypt = require('bcrypt');
+import { Router, Request, Response, NextFunction } from 'express';
+import * as passport from 'passport';
+import * as backend from './db/backend';
+import * as users from './db/users';
+import { makeUserAndTable } from './db/helpers';
+import { authenticateAndLogin } from './auth';
 
-export const router = express.Router();
-
-const saltRounds = 10;
+export const router = Router();
 
 router.get('/', (req, res) => {
     res.render('index', {session: req.session});
@@ -31,7 +30,7 @@ router.get('/login/guest', (req, res, next) => {
         if (user) {
             authenticateAndLogin(req, res, next);
         } else {
-            make_user(newUser, (err) => {
+            makeUserAndTable(newUser, (err) => {
                 if (err) {
                     return next(err)
                 }
@@ -73,7 +72,7 @@ router.post('/register', (req, res, next) => {
         email:    req.body.email,
         password: req.body.password,
     };
-    make_user(user, (err) => {
+    makeUserAndTable(user, (err) => {
         if (err) { return next(err) };
         res.render('message', { body: "Created User." });
     });
@@ -132,49 +131,3 @@ router.get('/tasks/:taskId/delete', (req, res) => {
         res.redirect('..');
     });
 });
-
-//TODO move this out?
-function make_user(user: users.IUserRecord, callback: (err: Error) => void) {
-    bcrypt.hash(user.password, saltRounds, (err, hash) => {
-        if (err) {
-            callback(err);
-        } else {
-            user.password = hash;
-            users.addUser(user, (err) => {
-                if (err) {
-                    callback(err);
-                } else {
-                    backend.create_table_for_user(user.username, (err) => {
-                        if (err) {
-                            callback(err);
-                        } else {
-                            callback(null);
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function authenticateAndLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
-    passport.authenticate('local', (err, user, info) => {
-        if (info) {
-            return res.render('error', {error: info.message});
-        }
-        if (err)  { return next(err); }
-        if (!user){ return res.redirect('/login/') }
-        req.login(user, (err) => {
-            if (err)  { return next(err); }
-            req.session.username = user.username;
-            req.session.filter = '';
-            req.session.save(err => {
-                if (err) {
-                    next(err);
-                } else {
-                    res.redirect('/tasks/');
-                }
-            });
-        });
-    })(req, res, next);
-}
