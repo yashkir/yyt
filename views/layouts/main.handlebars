@@ -10,7 +10,7 @@
       <li><a href="/">Home</a></li>
       <li><a href="/tasks/">Tasks</a></li>
       {{#if session.username}}
-        <li class="userstatus"><b>User: {{session.username}}</b></li>
+        <li><a href="/manage/"><b>User: {{session.username}}</b></a></li>
         <li><a href="/logout/">Logout</a></li>
       {{else}}
         <li><a href="/register/">Register</a></li>

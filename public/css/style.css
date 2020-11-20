@@ -18,11 +18,6 @@ ul.navbar li {
   float: left;
 }
 
-ul.navbar li.userstatus {
-  margin: 0px;
-  padding: 12px 12px;
-}
-
 ul.navbar li a {
   display: block;
   margin: 0px 0px;
