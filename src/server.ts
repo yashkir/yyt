@@ -30,13 +30,19 @@ passport.use(new LocalStrategy(
             if (err) {
                 return done(err);
             }
-            if (user && bcrypt.compareSync(password, user.password)) { //TODO
-                console.log(`Authenticated ${username}`);
-                return done(null, user);
-            } else {
-                console.log(`Can't authenticate ${username}`);
-                return done(null, false, { message: "Invalid Credentials.\n" });
+            if (!user) {
+                return done(null, false, { message: "User not found.\n" });
             }
+            bcrypt.compare(password, user.password, (err, same) => {
+                if (err) {
+                    return done(err);
+                }
+                if (same) {
+                    return done(null, user);
+                } else {
+                    return done(null, false, { message: "Invalid Credentials.\n" });
+                }
+            });
         });
     })
 );
