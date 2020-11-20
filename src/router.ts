@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import * as passport from 'passport';
 import * as backend from './db/backend';
 import * as users from './db/users';
-import { makeUserAndTable } from './db/helpers';
+import { makeUserAndTable, deleteUserAndDropTable } from './db/helpers';
 import { authenticateAndLogin } from './auth';
 
 export const router = Router();
@@ -60,6 +60,12 @@ router.get('/manage', (req, res, next) => {
 
         res.render('manage', {session: req.session, user: user});
     })
+});
+
+router.get('/manage/delete', (req, res, next) => {
+    // TODO add a confirmation
+    deleteUserAndDropTable(req.session.username);
+    res.redirect('/logout');
 });
 
 router.post('/register', (req, res, next) => {

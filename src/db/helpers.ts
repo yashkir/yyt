@@ -6,6 +6,13 @@ import { db } from './backend';
 const guestPrefix = "Guest_";
 const saltRounds = 10;
 
+export function deleteUserAndDropTable (username: string) {
+    db.serialize(() => {
+        db.run("DELETE FROM users WHERE username=?", username);
+        db.run(`DROP TABLE IF EXISTS tasks_${username}`);
+    });
+}
+
 export function cleanupSessionlessGuests(): void {
     db.all("SELECT id, username FROM users WHERE isGuest=1", (err: Error, rows: any[]) => {
         if (err) { return console.log(err) }
@@ -17,10 +24,7 @@ export function cleanupSessionlessGuests(): void {
                 if (err) { return console.log(err); };
                 if (!row) {
                     console.log(`${id} guest session not found, deleting and dropping table`)
-                    db.serialize(() => {
-                        db.run("DELETE FROM users WHERE username=?", username);
-                        db.run(`DROP TABLE IF EXISTS tasks_${username}`);
-                    });
+                    deleteUserAndDropTable(username);
                 }
                 else {
                     console.log(`guest ${id} valid`)
