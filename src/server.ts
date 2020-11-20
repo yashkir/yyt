@@ -1,33 +1,18 @@
-/* --------------------------------------------------------------------------
- * server
- *
- * This server is a front for the two database interfaces. We handle all
- * sessions, authentication, templating, and interaction.
- * ----------------------------------------------------------------------- */
-import express = require('express');
-import exphbs = require('express-handlebars');
-import uuid = require('uuid');
-import session = require('express-session');
+import * as express from 'express';
+import * as exphbs from 'express-handlebars';
+import * as uuid from 'uuid';
+import * as bodyParser from 'body-parser';
+import * as session from 'express-session';
 import * as sqlite3 from 'sqlite3';
 import sqliteStoreFactory from 'express-session-sqlite';
-import bodyParser = require('body-parser');
-import passport = require('passport');
+import * as passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import * as bcrypt from 'bcrypt';
-
 import * as backend from './db/backend';
 import * as usersDb from './db/users';
 import { cleanupSessionlessGuests } from './db/helpers';
 import { router } from './router';
-
-/* --------------------------------------------------------------------------
- * Setup
- * ----------------------------------------------------------------------- */
-const DBPATH = './tmp/test.db'; //TODO move this out
-const SECRET = 'very secret';
-const cookieMaxAge = 1 *24*60*60*1000; // 1 day in ms
-const sessionTTL = 1 *24*60*60*1000; // 1 day in ms
-const port = 8080;
+import { DBPATH, SECRET, COOKIE_MAX_AGE, SESSION_TTL, PORT } from './config';
 
 const app = express();
 const SqliteStore = sqliteStoreFactory(session);
@@ -70,26 +55,19 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-
-/* --------------------------------------------------------------------------
- * App
- * ----------------------------------------------------------------------- */
-
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
-
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 app.use(session({
-    cookie: { maxAge: cookieMaxAge },
+    cookie: { maxAge: COOKIE_MAX_AGE },
     genid: (req) => {
         return uuid.v4();
     },
     store: new SqliteStore({
         driver: sqlite3.Database,
         path: DBPATH,
-        ttl: sessionTTL,
+        ttl: SESSION_TTL,
     }),
     secret: SECRET,
     resave: false,
@@ -97,12 +75,11 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-// This is just a debugging logger
 app.use((req, res, next) => {
+    // This is just a debugging logger
     console.log("Log> Req UUID: " + req.sessionID);
     next();
 });
-
 app.use('/', router);
 app.use(function errorMiddleware (err: Error,
                                   req: express.Request,
@@ -111,13 +88,11 @@ app.use(function errorMiddleware (err: Error,
     res.render('error', { error: err });
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
-
-
 setInterval(() => {
     console.log('Hourly guest cleanup.');
     cleanupSessionlessGuests();
-}, 60000); //minutely for now
-//}, 1000*60*60); //hourly
+}, 1000*60*60); //hourly
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
