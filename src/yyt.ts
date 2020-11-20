@@ -107,7 +107,6 @@ function del(user: string, task_id: number) {
     const rl = readline.createInterface(process.stdin, process.stdout);
 
     console.log(`deleting task: ${task_id}`);
-    // TODO factor confirmation out
     rl.question("Are you sure? (yes/NO):", (answer) => {
         if(answer.toLowerCase() == 'yes') {
             backend.del(user, task_id);
@@ -124,7 +123,7 @@ function done(user: string, task_id: number) {
 function resetTasks(user: string) {
     const rl = readline.createInterface(process.stdin, process.stdout);
 
-    rl.write("RESETTING THE DATABASE\n");
+    rl.write("DELETING ALL TASKS!\n");
     rl.question("Are you sure? (yes/NO):", (answer) => {
         if(answer == 'yes') {
             backend.reset(user);
