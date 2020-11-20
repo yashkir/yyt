@@ -47,7 +47,7 @@ router.get('/login/guest', (req, res, next) => {
 router.post('/login', authenticateAndLogin);
 
 router.get('/logout', (req, res, next) => {
-    req.logout(); //TODO session too
+    req.logout();
     req.session.username = null;
     req.session.save((err) => {
         if (err) { console.log(err); }
@@ -56,7 +56,6 @@ router.get('/logout', (req, res, next) => {
 });
 
 router.get('/manage', (req, res, next) => {
-    // TODO use passport.deserializeUser here?
     users.getUserById(req.session.passport.user, (err, user) => {
         if(err) { next(err); }
 
@@ -82,15 +81,6 @@ router.post('/register', (req, res, next) => {
 
 router.get('/register', (req, res) => {
     return res.render('register', {session: req.session, title: 'Register'});
-});
-
-//TODO remove, deprecated
-router.get('/authtest', (req, res) => {
-    if (req.isAuthenticated()) {
-        return res.render('error', {error: "Authenticated is TRUE"});
-    } else {
-        return res.render('error', {error: "Authenticated is FALSE"});
-    }
 });
 
 router.get('/tasks', (req, res) => {
