@@ -1,3 +1,5 @@
+![Yello Yolk Tasker](public/images/egg-small.png)
+
 # Yellow Yolk Tasks (YYT)
 
 This is a task/goal manager built using SQLite and Node.js. The server uses
