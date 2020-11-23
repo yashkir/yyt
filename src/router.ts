@@ -126,6 +126,27 @@ router.get('/tasks/filter', (req, res) => {
     });
 });
 
+router.get('/tasks/download', (req, res, next) => {
+    // TODO move auth check out
+    if (!req.user) {
+        return res.redirect('/login');
+    }
+
+    let username = req.session.username; backend.export_todotxt(username, (text) => {
+        const fileData = text;
+        const fileName = `${username}_todo.txt`;
+        const fileType = 'text/plain';
+
+        res.writeHead(200, {
+            'Content-Disposition': `attachment; filename="${fileName}"`,
+            'Content-Type': fileType,
+        })
+
+        const download = Buffer.from(fileData);
+        res.end(download);
+    });
+});
+
 router.get('/tasks/:taskId/done', (req, res) => {
     backend.done(req.session.username, parseInt(req.params.taskId), true, (err) => {
         res.redirect('..');
