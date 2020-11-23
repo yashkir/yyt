@@ -1,6 +1,6 @@
 <h1>{{session.username}}'s Task List <small>[<a href="download/">download</a>]</small></h1>
 
-<table>
+<table class="task-controls">
   <tr>
     <form action="add/">
       <td><input type="submit" value="Add Task"></td>
@@ -11,8 +11,19 @@
     <form action="filter/">
       <td> <input type="submit" value="Filter"> </td>
       <td> <input type="text" id="filter_text" name="filter_text"> </td>
-      <td> <label for="filter_text"><em>{{session.filter}}<em></td>
+      <td> <label for="filter_text"><em>{{session.filter}}<em></label></td>
     </form>
+  </tr>
+  <tr>
+    <td>
+      <form action="hidedone/">
+        {{#if session.hideDone}}
+        <input class="show-done" type="submit" value="Show Done">
+        {{else}}
+        <input class="hide-done" type="submit" value="Hide Done">
+        {{/if}}
+      </form>
+    </td>
   </tr>
 </table>
 <br>
@@ -27,3 +38,4 @@
     </li>
   </ul>
 {{/each}}
+

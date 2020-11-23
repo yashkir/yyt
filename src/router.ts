@@ -98,6 +98,9 @@ router.get('/tasks', (req, res) => {
             console.log(err);
             return res.render('error', {error: err})
         }
+        if (req.session.hideDone) {
+            tasks = tasks.filter(task => !task.isDone)
+        }
         res.render('tasks', {session: req.session, title: 'Tasks', tasks: tasks});
     }, req.session.filter || '');
 });
@@ -145,6 +148,11 @@ router.get('/tasks/download', (req, res, next) => {
         const download = Buffer.from(fileData);
         res.end(download);
     });
+});
+
+router.get('/tasks/hidedone', (req, res, next) => {
+    req.session.hideDone = !req.session.hideDone;
+    req.session.save((err) => res.redirect('../')); //TODO ignoring error here
 });
 
 router.get('/tasks/:taskId/done', (req, res) => {
