@@ -127,6 +127,10 @@ export function export_todotxt(user_id: string, callback: { (arg0: string): void
     let lines: string[] = [];
 
     list(user_id, (err, tasks) => {
+        if (!tasks) {
+            return callback('');
+        }
+
         tasks.forEach((task) => {
             let line: string;
             if (task.isDone) {
@@ -138,7 +142,7 @@ export function export_todotxt(user_id: string, callback: { (arg0: string): void
         });
 
         let blob = lines.join('\n')
-        callback(blob);
+        return callback(blob);
     });
 }
 
