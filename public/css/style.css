@@ -6,8 +6,8 @@ body {
   margin: 0px;
 }
 
-table.task-controls input {
-  width: 100%;
+div.task-controls form {
+  display: inline;
 }
 
 div.navbar {
