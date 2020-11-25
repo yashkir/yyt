@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-    res.render('login', {session: req.session, title: 'Login'});
+    res.render('login', {title: 'Login'});
 });
 
 router.get('/login/guest', (req, res, next) => {
@@ -59,12 +59,12 @@ router.get('/manage', ensureAuthenticated, (req, res, next) => {
     users.getUserById(user.id as unknown as string, (err, user) => { //TODO change getUserById param to number
         if(err) { next(err); }
 
-        res.render('manage', {session: req.session, user: user});
+        res.render('manage', {user: user});
     })
 });
 
 router.get('/manage/delete', ensureAuthenticated, (req, res) => {
-    res.render('delete');
+    res.render('delete', {title: "Delete User"});
 });
 
 router.post('/manage/delete', ensureAuthenticated, (req, res) => {
@@ -94,7 +94,7 @@ router.post('/register', (req, res, next) => {
 });
 
 router.get('/register', (req, res) => {
-    return res.render('register', {session: req.session, title: 'Register'});
+    return res.render('register', {title: 'Register'});
 });
 
 router.get('/tasks', (req, res) => {
