@@ -1,6 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import passport = require('passport');
 
+export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
+    if (req.isAuthenticated) {
+        return next();
+    } else {
+        return res.redirect('/login');
+    }
+}
+
 export function authenticateAndLogin(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('local', (err, user, info) => {
         if (info) {

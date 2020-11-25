@@ -3,7 +3,7 @@ import * as passport from 'passport';
 import * as backend from './db/backend';
 import * as users from './db/users';
 import { makeUserAndTable, deleteUserAndDropTable } from './db/helpers';
-import { authenticateAndLogin } from './auth';
+import { authenticateAndLogin, ensureAuthenticated } from './auth';
 
 export const router = Router();
 
@@ -54,18 +54,27 @@ router.get('/logout', (req, res, next) => {
     });
 });
 
-router.get('/manage', (req, res, next) => {
-    users.getUserById(req.session.passport.user, (err, user) => {
+router.get('/manage', ensureAuthenticated, (req, res, next) => {
+    const user = req.user as users.IUserRecord;
+    users.getUserById(user.id as unknown as string, (err, user) => { //TODO change getUserById param to number
         if(err) { next(err); }
 
         res.render('manage', {session: req.session, user: user});
     })
 });
 
-router.get('/manage/delete', (req, res, next) => {
-    // TODO add a confirmation
-    deleteUserAndDropTable(req.session.username);
-    res.redirect('/logout');
+router.get('/manage/delete', ensureAuthenticated, (req, res) => {
+    res.render('delete');
+});
+
+router.post('/manage/delete', ensureAuthenticated, (req, res) => {
+    console.log(req.user);
+    if (req.body.username === req.session.username) {
+        deleteUserAndDropTable(req.session.username);
+        res.redirect('/logout');
+    } else {
+        res.render('message', { body: "Username did not match, deletion aborted." });
+    }
 });
 
 router.post('/register', (req, res, next) => {
