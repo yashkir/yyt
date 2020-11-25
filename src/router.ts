@@ -8,7 +8,7 @@ import { authenticateAndLogin, ensureAuthenticated } from './auth';
 export const router = Router();
 
 router.get('/', (req, res) => {
-    res.render('index', {session: req.session});
+    res.render('index');
 });
 
 router.get('/login', (req, res) => {

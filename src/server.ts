@@ -86,6 +86,14 @@ app.use((req, res, next) => {
     console.log("Log> Req UUID: " + req.sessionID);
     next();
 });
+app.use((req, res, next) => {
+    if (req.user) {
+        res.locals.isAuthenticated = req.isAuthenticated();
+        res.locals.username = (req.user as usersDb.IUserRecord).username;
+        console.log(res.locals.username);
+    }
+    return next();
+});
 app.use('/', router);
 app.use(function errorMiddleware (err: Error,
                                   req: express.Request,
