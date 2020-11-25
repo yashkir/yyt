@@ -10,10 +10,13 @@ table.task-controls input {
   width: 100%;
 }
 
+div.navbar {
+  background-color: #ffffa0;
+}
+
 ul.navbar {
   background-color: #ffffa0;
   list-style-type: none;
-  margin: 0;
   padding: 0;
   overflow: hidden;
 }
@@ -79,4 +82,5 @@ input.show-done {
 .content {
   padding: 15px;
   max-width: 965px;
+  margin: 0 auto;
 }
