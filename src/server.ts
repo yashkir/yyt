@@ -90,7 +90,6 @@ app.use((req, res, next) => {
     if (req.user) {
         res.locals.isAuthenticated = req.isAuthenticated();
         res.locals.username = (req.user as usersDb.IUserRecord).username;
-        console.log(res.locals.username);
     }
     return next();
 });

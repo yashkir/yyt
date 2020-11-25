@@ -18,7 +18,7 @@ router.get('/login', (req, res) => {
 router.get('/login/guest', (req, res, next) => {
     const newUser: users.IUserRecord = {
         id: null,
-        username: `Guest-${req.user.id}`.replace(/-/g,'_'),
+        username: `Guest-${req.session.id}`.replace(/-/g,'_'),
         email: null,
         password: 'password',
         isGuest: true,
@@ -47,11 +47,7 @@ router.post('/login', authenticateAndLogin);
 
 router.get('/logout', (req, res, next) => {
     req.logout();
-    req.session.username = null;
-    req.session.save((err) => {
-        if (err) { console.log(err); }
-        res.redirect('/');
-    });
+    res.redirect('/');
 });
 
 router.get('/manage', ensureAuthenticated, (req, res, next) => {
@@ -68,9 +64,8 @@ router.get('/manage/delete', ensureAuthenticated, (req, res) => {
 });
 
 router.post('/manage/delete', ensureAuthenticated, (req, res) => {
-    console.log(req.user);
-    if (req.body.username === req.session.username) {
-        deleteUserAndDropTable(req.session.username);
+    if (req.body.username === req.user.username) {
+        deleteUserAndDropTable(req.user.username);
         res.redirect('/logout');
     } else {
         res.render('message', { body: "Username did not match, deletion aborted." });
@@ -102,7 +97,7 @@ router.get('/tasks', (req, res) => {
         return res.render('error', {error: "Not Logged in!"});
     }
 
-    backend.list(req.session.username, (err, tasks) => {
+    backend.list(req.user.username, (err, tasks) => {
         if (err) {
             console.log(err);
             return res.render('error', {error: err})
@@ -117,7 +112,7 @@ router.get('/tasks', (req, res) => {
 router.get('/tasks/add', (req, res) => {
     let text = req.query['task_text'] as string;
     if (text.length > 0) {
-        backend.add(req.session.username, text, false, (err) => {
+        backend.add(req.user.username, text, false, (err) => {
             res.redirect('..');
         });
     } else {
@@ -144,7 +139,8 @@ router.get('/tasks/download', (req, res, next) => {
         return res.redirect('/login');
     }
 
-    let username = req.session.username; backend.export_todotxt(username, (text) => {
+    let username = req.user.username;
+    backend.export_todotxt(username, (text) => {
         const fileData = text;
         const fileName = `${username}_todo.txt`;
         const fileType = 'text/plain';
@@ -165,13 +161,13 @@ router.get('/tasks/hidedone', (req, res, next) => {
 });
 
 router.get('/tasks/:taskId/done', (req, res) => {
-    backend.done(req.session.username, parseInt(req.params.taskId), true, (err) => {
+    backend.done(req.user.username, parseInt(req.params.taskId), true, (err) => {
         res.redirect('..');
     });
 });
 
 router.get('/tasks/:taskId/delete', (req, res) => {
-    backend.del(req.session.username, parseInt(req.params.taskId), (err) => {
+    backend.del(req.user.username, parseInt(req.params.taskId), (err) => {
         res.redirect('..');
     });
 });

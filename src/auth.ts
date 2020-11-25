@@ -18,7 +18,6 @@ export function authenticateAndLogin(req: Request, res: Response, next: NextFunc
         if (!user){ return res.redirect('/login/') }
         req.login(user, (err) => {
             if (err)  { return next(err); }
-            req.session.username = user.username;
             req.session.filter = '';
             req.session.save(err => {
                 if (err) {
