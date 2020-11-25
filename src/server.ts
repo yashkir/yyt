@@ -26,7 +26,7 @@ backend.init(DBPATH, true, (err) => {
 
 passport.use(new LocalStrategy(
     (username, password, done) => {
-        usersDb.getUserByUsername(username, (err, user) => {
+        usersDb.getUserByUsername(username, (err, user: usersDb.IUserRecord) => {
             if (err) {
                 return done(err);
             }
@@ -52,7 +52,7 @@ passport.serializeUser((user: usersDb.IUserRecord, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    usersDb.getUserById(id as string, (err, user) => {
+    usersDb.getUserById(id as string, (err, user: usersDb.IUserRecord) => {
         if (!err) {
             done(null, user);
         } else {

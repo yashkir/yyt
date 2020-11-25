@@ -18,7 +18,7 @@ router.get('/login', (req, res) => {
 router.get('/login/guest', (req, res, next) => {
     const newUser: users.IUserRecord = {
         id: null,
-        username: `Guest-${req.session.id}`.replace(/-/g,'_'),
+        username: `Guest-${req.user.id}`.replace(/-/g,'_'),
         email: null,
         password: 'password',
         isGuest: true,
