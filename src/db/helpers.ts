@@ -2,8 +2,8 @@ import * as bcrypt from 'bcrypt';
 import * as backend from './backend';
 import * as users from './users';
 import { db } from './backend';
+import { GUEST_PREFIX } from '../config'
 
-const guestPrefix = "Guest_";
 const saltRounds = 10;
 
 export function deleteUserAndDropTable (username: string) {
@@ -18,7 +18,7 @@ export function cleanupSessionlessGuests(): void {
         if (err) { return console.log(err) }
         rows.forEach( (row) => {
             let username = row.username;
-            let id = row.username.replace(guestPrefix, '').replace(/_/g, '-');
+            let id = row.username.replace(GUEST_PREFIX, '').replace(/_/g, '-');
 
             db.get("SELECT data FROM sessions WHERE sid=?", [id], (err, row) => {
                 if (err) { return console.log(err); };

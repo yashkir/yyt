@@ -14,7 +14,7 @@ import * as backend from './db/backend';
 import * as usersDb from './db/users';
 import { cleanupSessionlessGuests } from './db/helpers';
 import { router } from './router';
-import { DBPATH, SECRET, COOKIE_MAX_AGE, SESSION_TTL, PORT } from './config';
+import { DBPATH, SECRET, COOKIE_MAX_AGE, SESSION_TTL, PORT, GUEST_PREFIX } from './config';
 
 const app = express();
 const SqliteStore = sqliteStoreFactory(session);
@@ -89,9 +89,17 @@ app.use((req, res, next) => {
     next();
 });
 app.use((req, res, next) => {
+    /* Set up locals for our templater. Trim the guest UUID while we
+     * are at it. */
     if (req.user) {
         res.locals.isAuthenticated = req.isAuthenticated();
         res.locals.username = (req.user as usersDb.IUserRecord).username;
+
+        let re = new RegExp(`^${GUEST_PREFIX}`);
+        if (re.exec(res.locals.username)) {
+            // Here we simply drop the last char (assumed to be underscore)
+            res.locals.username = GUEST_PREFIX.slice(0,-1);
+        }
     }
     return next();
 });

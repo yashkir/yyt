@@ -4,7 +4,8 @@ import * as backend from './db/backend';
 import * as users from './db/users';
 import { makeUserAndTable, deleteUserAndDropTable } from './db/helpers';
 import { authenticateAndLogin, ensureAuthenticated } from './auth';
-import { GUEST_SAMPLE_TODO, REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT } from './config';
+import { GUEST_PREFIX, GUEST_SAMPLE_TODO,
+         REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT } from './config';
 
 export const router = Router();
 
@@ -21,7 +22,7 @@ router.get('/login', (req, res) => {
 router.get('/login/guest', (req, res, next) => {
     const newUser: users.IUserRecord = {
         id: null,
-        username: `Guest-${req.session.id}`.replace(/-/g,'_'),
+        username: `${GUEST_PREFIX}${req.session.id}`.replace(/-/g,'_'),
         email: null,
         password: 'password',
         isGuest: true,
