@@ -8,6 +8,8 @@ import sqliteStoreFactory from 'express-session-sqlite';
 import * as passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import * as bcrypt from 'bcrypt';
+import * as fileUpload  from 'express-fileupload';
+
 import * as backend from './db/backend';
 import * as usersDb from './db/users';
 import { cleanupSessionlessGuests } from './db/helpers';
@@ -93,6 +95,7 @@ app.use((req, res, next) => {
     }
     return next();
 });
+app.use(fileUpload());
 app.use('/', router);
 app.use(function errorMiddleware (err: Error,
                                   req: express.Request,

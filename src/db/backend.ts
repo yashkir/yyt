@@ -148,7 +148,7 @@ export function export_todotxt(user_id: string, callback: { (arg0: string): void
 
 /* Load a 'todo.txt' formatted string into the database.
  * WARNING: resets the database.  */
-export function import_todotxt(user_id: string, blob: string): void {
+export function import_todotxt(user_id: string, blob: string, callback?: (err: Error | null) => void): void {
     let lines = blob.split('\n');
 
     db.serialize(() => {
@@ -160,6 +160,7 @@ export function import_todotxt(user_id: string, blob: string): void {
                 add(user_id, line);
             }
         });
+        if (callback) { callback(null); }
     });
 }
 

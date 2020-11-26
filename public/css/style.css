@@ -6,6 +6,11 @@ body {
   margin: 0px;
 }
 
+pre {
+  margin-left: 20px;
+  font-family: monospace;
+}
+
 div.task-controls form {
   display: inline;
 }

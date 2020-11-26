@@ -1,0 +1,22 @@
+<h1>Upload Tasks</h1>
+
+<p>
+    Tasks must be in <a href="https://github.com/todotxt/todo.txt">todo.txt</a> format.
+    One task per line in plain text. A leading 'x ' denotes a done task. The the task
+    downloader creates files that are also valid for upload. For example:
+</p>
+
+<pre>
++work finish important project
++work find the fridge burglar
+x +work start important project
++home replace light bulb
+buy a new notebook
+x buy a new pen
+x take out the trash
+</pre>
+
+<form action="" method='post' encType='multipart/form-data'>
+    <input type='file' name='upload' />
+    <input type='submit' value='upload'/>
+</form>

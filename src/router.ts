@@ -182,6 +182,18 @@ router.get('/tasks/download', (req, res, next) => {
     });
 });
 
+router.post('/tasks/upload', (req, res, next) => {
+    let blob = req.files.upload.data.toString();
+    backend.import_todotxt(req.user.username, blob, (err) => {
+        if (err) { return next(err) };
+        res.redirect('../');
+    });
+});
+
+router.get('/tasks/upload', (req, res, next) => {
+    res.render('upload');
+});
+
 router.get('/tasks/hidedone', (req, res, next) => {
     req.session.hideDone = !req.session.hideDone;
     req.session.save((err) => res.redirect('../')); //TODO ignoring error here
