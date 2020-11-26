@@ -4,8 +4,11 @@ import * as backend from './db/backend';
 import * as users from './db/users';
 import { makeUserAndTable, deleteUserAndDropTable } from './db/helpers';
 import { authenticateAndLogin, ensureAuthenticated } from './auth';
+import { REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT } from './config';
 
 export const router = Router();
+
+let IPdata: Map<string, {resetTime: number, attempts: number}> = new Map();
 
 router.get('/', (req, res) => {
     res.render('index');
@@ -73,6 +76,27 @@ router.post('/manage/delete', ensureAuthenticated, (req, res) => {
 });
 
 router.post('/register', (req, res, next) => {
+    /* Only allow REGISTER_MAX_PER_IP attempts before REGISTER_MAX_TIMEOUT
+     * time passes */
+    if (!IPdata.has(req.ip)) {
+        IPdata.set(req.ip, {
+            resetTime: Date.now() + REGISTER_MAX_TIMEOUT,
+            attempts: 1
+        });
+    } else {
+        if (Date.now() > IPdata.get(req.ip).resetTime) {
+            IPdata.delete(req.ip);
+        } else {
+            IPdata.get(req.ip).attempts += 1;
+            if (IPdata.get(req.ip).attempts > REGISTER_MAX_PER_IP) {
+                let wait = IPdata.get(req.ip).resetTime - Date.now();
+                return res.render('error', { 
+                    error: `Registration attempt limit for IP exceeded, wait ${wait / 1000} seconds.`
+                });
+            } 
+        }
+    }
+
     if (req.body.password != req.body.password2) {
         next(new Error("Passwords do not match."));
     }
