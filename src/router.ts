@@ -186,7 +186,7 @@ router.post('/tasks/upload', (req, res, next) => {
     let blob = req.files.upload.data.toString();
     backend.import_todotxt(req.user.username, blob, (err) => {
         if (err) { return next(err) };
-        res.redirect('../');
+        return res.redirect('../');
     });
 });
 

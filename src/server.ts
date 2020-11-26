@@ -95,7 +95,9 @@ app.use((req, res, next) => {
     }
     return next();
 });
-app.use(fileUpload());
+app.use(fileUpload({
+    limits: { fileSize: 100 * 1024 },
+}));
 app.use('/', router);
 app.use(function errorMiddleware (err: Error,
                                   req: express.Request,
