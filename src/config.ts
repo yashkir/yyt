@@ -7,3 +7,12 @@ export const PORT = parseInt(process.env.PORT) || 8080;
 // These are used to limit registrations to around 5 per 10 minutes per IP
 export const REGISTER_MAX_PER_IP = parseInt(process.env.REGISTER_MAX_PER_IP) || 5;
 export const REGISTER_MAX_TIMEOUT = parseInt(process.env.REGISTER_MAX_TIMEOUT) || 1000*60*10;
+
+export const GUEST_SAMPLE_TODO = process.env.GUEST_SAMPLE_TODO ||
+`+work finish important project
++work find the fridge burglar
+x +work start important project
++home replace light bulb
+buy a new notebook
+x buy a new pen
+x take out the trash`

@@ -4,7 +4,7 @@ import * as backend from './db/backend';
 import * as users from './db/users';
 import { makeUserAndTable, deleteUserAndDropTable } from './db/helpers';
 import { authenticateAndLogin, ensureAuthenticated } from './auth';
-import { REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT } from './config';
+import { GUEST_SAMPLE_TODO, REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT } from './config';
 
 export const router = Router();
 
@@ -38,7 +38,10 @@ router.get('/login/guest', (req, res, next) => {
                     return next(err)
                 }
                 else {
-                    console.log(`Created ${newUser.username} with password: password`);
+                    /* We don't pass a callback to the import, I am assuming
+                     * that the serialized calls in .import_todotxt always finish
+                     * before the next db calls. TODO take a look at the timing */
+                    backend.import_todotxt(newUser.username, GUEST_SAMPLE_TODO);
                     authenticateAndLogin(req, res, next);
                 }
             });
