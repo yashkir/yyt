@@ -11,6 +11,23 @@ pre {
   font-family: monospace;
 }
 
+div.login-as-guest {
+  margin: 20px;
+  text-align: center;
+}
+
+button.login-as-guest {
+  padding: 20px;
+  border-radius: 10px;
+  border-width: 5px;
+  border-color: orange;
+  background-color: lightyellow;
+}
+
+button.login-as-guest:hover {
+  background-color: goldenrod;
+}
+
 div.task-controls form {
   display: inline;
 }
