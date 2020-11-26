@@ -165,7 +165,11 @@ export function import_todotxt(user_id: string, blob: string): void {
 
 
 export function create_table_for_user(user_id: string, callback?: (err: Error | null) => void) {
-    // TODO Sanitize table name
+    // Make sure there is no funny business in the name
+    if (user_id.match(/[^A-Za-z0-9_]/)) {
+        return callback(new Error("Invalid username, must contain only letters, numbers, or the underscore"));
+    }
+
     db.run(`CREATE TABLE IF NOT EXISTS
             tasks_${user_id} (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                   text TEXT,
