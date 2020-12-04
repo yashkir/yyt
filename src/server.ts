@@ -14,7 +14,7 @@ import * as backend from './db/backend';
 import * as usersDb from './db/users';
 import { cleanupSessionlessGuests } from './db/helpers';
 import { router } from './router';
-import { DBPATH, SECRET, COOKIE_MAX_AGE, SESSION_TTL, PORT, GUEST_PREFIX } from './config';
+import { DBPATH, SECRET, COOKIE_MAX_AGE, SESSION_TTL, PORT, ADDRESS, GUEST_PREFIX, URL_PREFIX } from './config';
 
 const app = express();
 const SqliteStore = sqliteStoreFactory(session);
@@ -65,7 +65,7 @@ passport.deserializeUser((id, done) => {
 
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
-app.use(express.static("public"));
+app.use(URL_PREFIX, express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
     cookie: { maxAge: COOKIE_MAX_AGE },
@@ -91,6 +91,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     /* Set up locals for our templater. Trim the guest UUID while we
      * are at it. */
+    res.locals.prefix = URL_PREFIX;
     if (req.user) {
         res.locals.isAuthenticated = req.isAuthenticated();
         res.locals.username = (req.user as usersDb.IUserRecord).username;
@@ -106,7 +107,7 @@ app.use((req, res, next) => {
 app.use(fileUpload({
     limits: { fileSize: 100 * 1024 },
 }));
-app.use('/', router);
+app.use(URL_PREFIX + '/', router);
 app.use(function errorMiddleware (err: Error,
                                   req: express.Request,
                                   res: express.Response,
@@ -119,6 +120,6 @@ setInterval(() => {
     cleanupSessionlessGuests();
 }, 1000*60*60); //hourly
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+app.listen(PORT, ADDRESS, () => {
+    console.log(`Server running at http://${ADDRESS}:${PORT}`);
 });

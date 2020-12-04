@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{prefix}}/css/style.css" rel="stylesheet" type="text/css">
     <title>YYT {{title}}</title>
   </head>
   <body>
     <div class="navbar">
       <ul class="navbar content">
-        <li><a href="/">Home</a></li>
-        <li><a href="/tasks/">Tasks</a></li>
+        <li><a href="{{prefix}}/">Home</a></li>
+        <li><a href="{{prefix}}/tasks/">Tasks</a></li>
         {{#if username}}
-          <li><a href="/manage/"><b>User: {{username}}</b></a></li>
-          <li><a href="/logout/">Logout</a></li>
+          <li><a href="{{prefix}}/manage/"><b>User: {{username}}</b></a></li>
+          <li><a href="{{prefix}}/logout/">Logout</a></li>
         {{else}}
-          <li><a href="/register/">Register</a></li>
-          <li><a href="/login/">Login</a></li>
+          <li><a href="{{prefix}}/register/">Register</a></li>
+          <li><a href="{{prefix}}/login/">Login</a></li>
         {{/if}}
       </ul>
     </div>

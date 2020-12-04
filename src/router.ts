@@ -5,7 +5,8 @@ import * as users from './db/users';
 import { makeUserAndTable, deleteUserAndDropTable } from './db/helpers';
 import { authenticateAndLogin, ensureAuthenticated } from './auth';
 import { GUEST_PREFIX, GUEST_SAMPLE_TODO,
-         REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT } from './config';
+         REGISTER_MAX_PER_IP, REGISTER_MAX_TIMEOUT,
+         URL_PREFIX } from './config';
 
 export const router = Router();
 
@@ -54,7 +55,7 @@ router.post('/login', authenticateAndLogin);
 
 router.get('/logout', (req, res, next) => {
     req.logout();
-    res.redirect('/');
+    res.redirect(URL_PREFIX + '/');
 });
 
 router.get('/manage', ensureAuthenticated, (req, res, next) => {
@@ -73,7 +74,7 @@ router.get('/manage/delete', ensureAuthenticated, (req, res) => {
 router.post('/manage/delete', ensureAuthenticated, (req, res) => {
     if (req.body.username === req.user.username) {
         deleteUserAndDropTable(req.user.username);
-        res.redirect('/logout');
+        res.redirect(URL_PREFIX + '/logout');
     } else {
         res.render('message', { body: "Username did not match, deletion aborted." });
     }
@@ -164,7 +165,7 @@ router.get('/tasks/filter', (req, res) => {
 router.get('/tasks/download', (req, res, next) => {
     // TODO move auth check out
     if (!req.user) {
-        return res.redirect('/login');
+        return res.redirect(URL_PREFIX + '/login');
     }
 
     let username = req.user.username;
