@@ -1,0 +1,13 @@
+[Unit]
+Description=Yellow Yolk Tasks server
+After=network.target
+
+[Service]
+User=yashkir
+Environment="URL_PREFIX=/yyt"
+Environment="PORT=8099"
+WorkingDirectory=/home/yashkir/yyt
+ExecStart=/usr/bin/yarn run server
+
+[Install]
+WantedBy=multi-user.target
