@@ -6,6 +6,8 @@ After=network.target
 User=yashkir
 Environment="URL_PREFIX=/yyt"
 Environment="PORT=8099"
+Environment="PARENT_SITE_NAME='yuriyyashkir.com'"
+Environment="PARENT_SITE_PATH='/'"
 WorkingDirectory=/home/yashkir/yyt
 ExecStart=/usr/bin/yarn run server
 

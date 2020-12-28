@@ -60,6 +60,17 @@ ul.navbar li a:hover {
   color: black;
 }
 
+ul.navbar li.parent-site a {
+  font-weight: bold;
+  background-color: #009688;
+  color: white;
+}
+
+ul.navbar li.parent-site a:hover {
+  color: black;
+  background-color: #ffa500;
+}
+
 ul.tasks {
   list-style-type: none;
   margin: 5px 5px;

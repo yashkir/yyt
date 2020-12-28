@@ -8,6 +8,9 @@
   <body>
     <div class="navbar">
       <ul class="navbar content">
+        {{#if parentSite}}
+          <li class="parent-site"><a href="{{parentSite.path}}">{{parentSite.name}}</a></li>
+        {{/if}}
         <li><a href="{{prefix}}/">Home</a></li>
         <li><a href="{{prefix}}/tasks/">Tasks</a></li>
         {{#if username}}

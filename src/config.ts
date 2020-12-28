@@ -20,3 +20,7 @@ x buy a new pen
 x take out the trash`
 
 export const URL_PREFIX = process.env.URL_PREFIX || "";
+
+// Defining both of these adds a return button to the navbar 
+export const PARENT_SITE_NAME = process.env.PARENT_SITE_NAME || null;
+export const PARENT_SITE_PATH = process.env.PARENT_SITE_PATH || null;
