@@ -68,7 +68,9 @@ export function del(user_id: string, id: number, callback?: (err: Error | null) 
 export function done(user_id: string, id: number, toggle?: boolean, callback?: (err: Error | null) => void): void {
     if (toggle) {
         db.get(`SELECT done FROM tasks_${user_id} WHERE id IS ?`, [id], (err, row) => {
-            if (row.done == 0) {
+            if (err) {
+                if (callback) { callback(err); }
+            } else if (row.done == 0) {
                 db.run(`UPDATE tasks_${user_id} SET done=1 WHERE id IS ?`, [id], (err) => {
                     if (callback) { callback(err); }
                 });
